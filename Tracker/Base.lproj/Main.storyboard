@@ -3,10 +3,8 @@
     <device id="retina6_12" orientation="portrait" appearance="light"/>
     <dependencies>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="23721"/>
-        <capability name="Named colors" minToolsVersion="9.0"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="System colors in document resources" minToolsVersion="11.0"/>
-        <capability name="collection view cell content view" minToolsVersion="11.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <scenes>
@@ -61,114 +59,18 @@
                                     <navigationItem title="Title" id="kBd-WZ-P7h"/>
                                 </items>
                             </navigationBar>
-                            <datePicker contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" datePickerMode="date" translatesAutoresizingMaskIntoConstraints="NO" id="xlL-Ym-vlY">
-                                <rect key="frame" x="300" y="49" width="77" height="34"/>
-                                <color key="backgroundColor" name="ypLightGrey"/>
-                                <constraints>
-                                    <constraint firstAttribute="height" constant="34" id="XbQ-Hw-DDJ"/>
-                                    <constraint firstAttribute="width" constant="77" id="aLY-uc-W11"/>
-                                </constraints>
-                                <userDefinedRuntimeAttributes>
-                                    <userDefinedRuntimeAttribute type="number" keyPath="layer.cornerRadius">
-                                        <integer key="value" value="8"/>
-                                    </userDefinedRuntimeAttribute>
-                                </userDefinedRuntimeAttributes>
-                            </datePicker>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Трекеры" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="kZI-Kd-GKY">
-                                <rect key="frame" x="16" y="88" width="254" height="41"/>
-                                <constraints>
-                                    <constraint firstAttribute="width" constant="254" id="Jp8-bP-sAL"/>
-                                    <constraint firstAttribute="height" constant="41" id="T8W-DW-0RL"/>
-                                </constraints>
-                                <fontDescription key="fontDescription" type="boldSystem" pointSize="34"/>
-                                <nil key="textColor"/>
-                                <nil key="highlightedColor"/>
-                            </label>
-                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="ErrorStar" translatesAutoresizingMaskIntoConstraints="NO" id="qQu-Xg-9uR">
-                                <rect key="frame" x="156.66666666666666" y="402" width="80" height="80"/>
-                                <constraints>
-                                    <constraint firstAttribute="height" constant="80" id="eXJ-Nm-Kqb"/>
-                                    <constraint firstAttribute="width" constant="80" id="mpa-VA-XbJ"/>
-                                </constraints>
-                            </imageView>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Что будем отслеживать?" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Znk-ie-hzp">
-                                <rect key="frame" x="121.66666666666669" y="490" width="150" height="15"/>
-                                <fontDescription key="fontDescription" type="system" weight="medium" pointSize="12"/>
-                                <nil key="textColor"/>
-                                <nil key="highlightedColor"/>
-                            </label>
-                            <searchBar contentMode="redraw" text="Поиск" translucent="NO" translatesAutoresizingMaskIntoConstraints="NO" id="EZx-7t-WPp">
-                                <rect key="frame" x="16" y="136" width="361" height="36"/>
-                                <constraints>
-                                    <constraint firstAttribute="height" constant="36" id="mA4-Qn-fuW"/>
-                                </constraints>
-                                <textInputTraits key="textInputTraits"/>
-                                <connections>
-                                    <outlet property="delegate" destination="oHl-Pr-OcT" id="5Ow-g9-Mef"/>
-                                </connections>
-                            </searchBar>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="YiO-Qw-i9y" userLabel="AddTrackerButton">
-                                <rect key="frame" x="6" y="45" width="42" height="42"/>
-                                <constraints>
-                                    <constraint firstAttribute="width" constant="42" id="Bl1-ks-vCn"/>
-                                    <constraint firstAttribute="height" constant="42" id="cgH-oI-qvB"/>
-                                </constraints>
-                                <state key="normal" title="Button"/>
-                                <buttonConfiguration key="configuration" style="plain" image="AddTracker" title=""/>
-                            </button>
-                            <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="wCe-ez-KIv">
-                                <rect key="frame" x="0.0" y="182" width="393" height="504"/>
-                                <color key="backgroundColor" systemColor="systemBackgroundColor"/>
-                                <collectionViewFlowLayout key="collectionViewLayout" minimumLineSpacing="10" minimumInteritemSpacing="10" id="ONn-XH-LaF">
-                                    <size key="itemSize" width="128" height="128"/>
-                                    <size key="headerReferenceSize" width="0.0" height="0.0"/>
-                                    <size key="footerReferenceSize" width="0.0" height="0.0"/>
-                                    <inset key="sectionInset" minX="0.0" minY="0.0" maxX="0.0" maxY="0.0"/>
-                                </collectionViewFlowLayout>
-                                <cells>
-                                    <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" id="ImP-TE-YwW">
-                                        <rect key="frame" x="0.0" y="0.0" width="127.99999999999997" height="128"/>
-                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                        <collectionViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" id="28p-88-6vj">
-                                            <rect key="frame" x="0.0" y="0.0" width="127.99999999999997" height="128"/>
-                                            <autoresizingMask key="autoresizingMask"/>
-                                        </collectionViewCellContentView>
-                                    </collectionViewCell>
-                                </cells>
-                            </collectionView>
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="ElL-La-M8w"/>
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                         <constraints>
-                            <constraint firstAttribute="trailing" secondItem="EZx-7t-WPp" secondAttribute="trailing" constant="16" id="49d-fz-FCA"/>
                             <constraint firstItem="5DQ-JC-WaC" firstAttribute="leading" secondItem="DXN-XG-6vT" secondAttribute="leading" id="5le-S3-IPL"/>
-                            <constraint firstItem="EZx-7t-WPp" firstAttribute="leading" secondItem="DXN-XG-6vT" secondAttribute="leading" constant="16" id="5tF-C0-12W"/>
-                            <constraint firstItem="ElL-La-M8w" firstAttribute="bottom" secondItem="wCe-ez-KIv" secondAttribute="bottom" id="6KU-EH-Jki"/>
-                            <constraint firstItem="xlL-Ym-vlY" firstAttribute="trailing" secondItem="ElL-La-M8w" secondAttribute="trailing" constant="-16" id="8KF-Z5-BuI"/>
-                            <constraint firstItem="wCe-ez-KIv" firstAttribute="leading" secondItem="ElL-La-M8w" secondAttribute="leading" id="Fgw-9i-jSp"/>
-                            <constraint firstItem="wCe-ez-KIv" firstAttribute="top" secondItem="5DQ-JC-WaC" secondAttribute="bottom" id="Ji3-9C-FzZ"/>
-                            <constraint firstItem="YiO-Qw-i9y" firstAttribute="top" secondItem="DXN-XG-6vT" secondAttribute="top" constant="45" id="Ld0-at-beY"/>
-                            <constraint firstItem="ElL-La-M8w" firstAttribute="trailing" secondItem="wCe-ez-KIv" secondAttribute="trailing" id="NhT-cl-Dxo"/>
-                            <constraint firstItem="kZI-Kd-GKY" firstAttribute="leading" secondItem="ElL-La-M8w" secondAttribute="leading" constant="16" id="P7y-SN-6ZH"/>
-                            <constraint firstItem="kZI-Kd-GKY" firstAttribute="top" secondItem="DXN-XG-6vT" secondAttribute="top" constant="88" id="PTR-lY-Prt"/>
-                            <constraint firstItem="qQu-Xg-9uR" firstAttribute="top" secondItem="DXN-XG-6vT" secondAttribute="top" constant="402" id="SGK-bT-MfL"/>
-                            <constraint firstItem="EZx-7t-WPp" firstAttribute="top" secondItem="DXN-XG-6vT" secondAttribute="top" constant="136" id="Urx-Ha-Bqu"/>
                             <constraint firstAttribute="trailing" secondItem="5DQ-JC-WaC" secondAttribute="trailing" id="Uzx-bz-Jpj"/>
-                            <constraint firstItem="YiO-Qw-i9y" firstAttribute="leading" secondItem="ElL-La-M8w" secondAttribute="leading" constant="6" id="awu-99-MVI"/>
-                            <constraint firstItem="xlL-Ym-vlY" firstAttribute="top" secondItem="DXN-XG-6vT" secondAttribute="top" constant="49" id="c58-MW-fTz"/>
-                            <constraint firstItem="Znk-ie-hzp" firstAttribute="centerX" secondItem="DXN-XG-6vT" secondAttribute="centerX" id="i48-BG-rhv"/>
-                            <constraint firstItem="Znk-ie-hzp" firstAttribute="top" secondItem="qQu-Xg-9uR" secondAttribute="bottom" constant="8" id="o2r-oZ-MIz"/>
                             <constraint firstItem="5DQ-JC-WaC" firstAttribute="top" secondItem="DXN-XG-6vT" secondAttribute="top" id="prM-WR-z5W"/>
-                            <constraint firstItem="qQu-Xg-9uR" firstAttribute="centerX" secondItem="DXN-XG-6vT" secondAttribute="centerX" id="rdb-6U-n96"/>
                         </constraints>
                     </view>
                     <tabBarItem key="tabBarItem" title="Трекеры" image="TrackerTabBar" id="bTD-VP-K3j"/>
                     <toolbarItems/>
                     <simulatedToolbarMetrics key="simulatedBottomBarMetrics"/>
-                    <connections>
-                        <outlet property="collectionView" destination="wCe-ez-KIv" id="Cdn-I7-zo5"/>
-                        <outlet property="datePicker" destination="xlL-Ym-vlY" id="1xa-te-Pb8"/>
-                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="ps2-Wg-Bt0" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
@@ -194,13 +96,8 @@
         </scene>
     </scenes>
     <resources>
-        <image name="AddTracker" width="42" height="42"/>
-        <image name="ErrorStar" width="80" height="80"/>
         <image name="StatisticsTabBar" width="28" height="28"/>
         <image name="TrackerTabBar" width="28" height="28"/>
-        <namedColor name="ypLightGrey">
-            <color red="0.94117647058823528" green="0.94117647058823528" blue="0.94117647058823528" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
-        </namedColor>
         <systemColor name="systemBackgroundColor">
             <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
         </systemColor>
