@@ -6,8 +6,8 @@ final class TrackersViewController: UIViewController {
 
     // MARK: - Properties
 
-    var categories: [TrackerCategory] = []
-    var completedTrackers: [TrackerRecord] = []
+    private var categories: [TrackerCategory] = []
+    private var completedTrackers: [TrackerRecord] = []
     private var selectedDate = Date()
     private var displayedCategories: [TrackerCategory] = []
 
@@ -17,27 +17,26 @@ final class TrackersViewController: UIViewController {
         let label = UILabel()
         label.text = "Трекеры"
         label.font = UIFont.boldSystemFont(ofSize: 34)
-        label.textColor = .label
+        label.textColor = UIColor(resource: .ypBlack)
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()
 
     private let datePicker: UIDatePicker = {
-        let picker = UIDatePicker()
-        picker.datePickerMode = .date
-        picker.preferredDatePickerStyle = .compact
-        picker.translatesAutoresizingMaskIntoConstraints = false
-        picker.layer.cornerRadius = 8
-        picker.clipsToBounds = true
-        return picker
-    }()
+            let picker = UIDatePicker()
+            picker.datePickerMode = .date
+            picker.preferredDatePickerStyle = .compact
+            picker.translatesAutoresizingMaskIntoConstraints = false
+            picker.locale = Locale(identifier: "ru_RU")
+            return picker
+        }()
 
     private let searchTextField: UITextField = {
         let textField = UITextField()
         textField.placeholder = "Поиск"
         textField.font = UIFont.systemFont(ofSize: 17)
         textField.translatesAutoresizingMaskIntoConstraints = false
-        textField.backgroundColor = UIColor(named: "ypGray2")
+        textField.backgroundColor = UIColor(resource: .ypGray2)
         textField.layer.cornerRadius = 10
         textField.layer.masksToBounds = true
         
@@ -64,7 +63,7 @@ final class TrackersViewController: UIViewController {
     }()
 
     private let emptyStateImageView: UIImageView = {
-        let imageView = UIImageView(image: UIImage(named: "ErrorStar"))
+        let imageView = UIImageView (image: UIImage(resource: .errorStar))
         imageView.contentMode = .scaleAspectFit
         imageView.translatesAutoresizingMaskIntoConstraints = false
         imageView.alpha = 0
@@ -84,7 +83,7 @@ final class TrackersViewController: UIViewController {
 
     private let addButton: UIButton = {
         let button = UIButton(type: .custom)
-        let image = UIImage(named: "AddTracker")
+        let image = UIImage(resource: .addTracker)
         button.setImage(image, for: .normal)
         button.layer.cornerRadius = 21
         button.translatesAutoresizingMaskIntoConstraints = false
@@ -119,14 +118,25 @@ final class TrackersViewController: UIViewController {
     }
 
     private func setupDatePicker() {
-        datePicker.addTarget(self, action: #selector(dateChanged(_:)), for: .valueChanged)
-        NSLayoutConstraint.activate([
-            datePicker.topAnchor.constraint(equalTo: view.topAnchor, constant: 49),
-            datePicker.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -16),
-            datePicker.widthAnchor.constraint(equalToConstant: 77),
-            datePicker.heightAnchor.constraint(equalToConstant: 34)
-        ])
-    }
+            NSLayoutConstraint.activate([
+                datePicker.topAnchor.constraint(equalTo: view.topAnchor, constant: 49),
+                datePicker.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -16),
+                datePicker.widthAnchor.constraint(equalToConstant: 77),
+                datePicker.heightAnchor.constraint(equalToConstant: 34)
+            ])
+            
+            updateDatePickerText()
+            datePicker.addTarget(self, action: #selector(dateChanged(_:)), for: .valueChanged)
+        }
+    
+    private func updateDatePickerText() {
+            if let textField = datePicker.subviews.first?.subviews.first(where: { $0 is UITextField }) as? UITextField {
+                let formatter = DateFormatter()
+                formatter.dateFormat = "dd.MM.yy"
+                textField.text = formatter.string(from: datePicker.date)
+                textField.textAlignment = .left
+            }
+        }
 
     private func setupAddButton() {
         NSLayoutConstraint.activate([
@@ -167,7 +177,7 @@ final class TrackersViewController: UIViewController {
             collectionView.topAnchor.constraint(equalTo: searchTextField.bottomAnchor, constant: 16),
             collectionView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
             collectionView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
-            collectionView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
+            collectionView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor)
         ])
     }
 
@@ -228,15 +238,35 @@ final class TrackersViewController: UIViewController {
     // MARK: - Actions
 
     @objc private func dateChanged(_ sender: UIDatePicker) {
-        selectedDate = sender.date
-        updateTrackers(for: selectedDate)
-    }
+            selectedDate = sender.date
+            updateDatePickerText()
+            updateTrackers(for: selectedDate)
+        }
 
     @objc private func addTrackerButtonTapped(_ sender: UIButton) {
         let habitVC = NewHabitCreationViewController()
+        
+        habitVC.onCreate = { [weak self] tracker in
+            guard let self = self else { return }
+            
+            if let index = self.categories.firstIndex(where: { $0.title == "Без категории" }) {
+                var category = self.categories[index]
+                var trackers = category.trackers
+                trackers.append(tracker)
+                let newCategory = TrackerCategory(title: category.title, trackers: trackers)
+                self.categories[index] = newCategory
+            } else {
+                let newCategory = TrackerCategory(title: "Без категории", trackers: [tracker])
+                self.categories.append(newCategory)
+            }
+
+            self.updateTrackers(for: self.selectedDate)
+        }
+        
         let nav = UINavigationController(rootViewController: habitVC)
         present(nav, animated: true)
     }
+
 
     // MARK: - Tracker Completion
 
@@ -302,22 +332,27 @@ extension TrackersViewController: UICollectionViewDataSource, UICollectionViewDe
     func collectionView(_ collectionView: UICollectionView,
                         viewForSupplementaryElementOfKind kind: String,
                         at indexPath: IndexPath) -> UICollectionReusableView {
-        guard kind == UICollectionView.elementKindSectionHeader else { return UICollectionReusableView() }
-        
-        let header = collectionView.dequeueReusableSupplementaryView(
+        guard kind == UICollectionView.elementKindSectionHeader else {
+            return UICollectionReusableView()
+        }
+
+        guard let header = collectionView.dequeueReusableSupplementaryView(
             ofKind: kind,
             withReuseIdentifier: CategoryHeaderView.identifier,
             for: indexPath
-        ) as! CategoryHeaderView
-        
-        header.titleLabel.text = displayedCategories[indexPath.section].title
+        ) as? CategoryHeaderView else {
+            assertionFailure("Failed to dequeue CategoryHeaderView")
+            return UICollectionReusableView()
+        }
+
+        header.configure(with: displayedCategories[indexPath.section].title)
         return header
     }
 
     func collectionView(_ collectionView: UICollectionView,
                         layout collectionViewLayout: UICollectionViewLayout,
                         referenceSizeForHeaderInSection section: Int) -> CGSize {
-        CGSize(width: collectionView.frame.width, height: 40)
+        CGSize(width: collectionView.frame.width, height: 18)
     }
 
     // MARK: - Layout
@@ -325,18 +360,31 @@ extension TrackersViewController: UICollectionViewDataSource, UICollectionViewDe
     func collectionView(_ collectionView: UICollectionView,
                         layout collectionViewLayout: UICollectionViewLayout,
                         sizeForItemAt indexPath: IndexPath) -> CGSize {
-        CGSize(width: 167, height: 148)
+        let itemsPerRow: CGFloat = 2
+        let sectionInsets = UIEdgeInsets(top: 12, left: 16, bottom: 16, right: 16)
+        let interItemSpacing: CGFloat = 9
+        
+
+        let totalSpacing = sectionInsets.left
+            + sectionInsets.right
+            + interItemSpacing * (itemsPerRow - 1)
+        
+        let availableWidth = collectionView.bounds.width - totalSpacing
+        let itemWidth = floor(availableWidth / itemsPerRow)
+        let itemHeight: CGFloat = 148
+        
+        return CGSize(width: itemWidth, height: itemHeight)
     }
 
     func collectionView(_ collectionView: UICollectionView,
                         layout collectionViewLayout: UICollectionViewLayout,
                         insetForSectionAt section: Int) -> UIEdgeInsets {
-        UIEdgeInsets(top: 16, left: 16, bottom: 16, right: 16)
+        UIEdgeInsets(top: 12, left: 16, bottom: 16, right: 16)
     }
 
     func collectionView(_ collectionView: UICollectionView,
                         layout collectionViewLayout: UICollectionViewLayout,
-                        minimumLineSpacingForSectionAt section: Int) -> CGFloat { 16 }
+                        minimumLineSpacingForSectionAt section: Int) -> CGFloat { 0 }
 
     func collectionView(_ collectionView: UICollectionView,
                         layout collectionViewLayout: UICollectionViewLayout,
@@ -349,13 +397,17 @@ final class CategoryHeaderView: UICollectionReusableView {
     
     static let identifier = "CategoryHeaderView"
     
-    let titleLabel: UILabel = {
+    // MARK: - UI
+    
+    private let titleLabel: UILabel = {
         let label = UILabel()
-        label.font = UIFont.boldSystemFont(ofSize: 20)
-        label.textColor = .label
+        label.font = UIFont.boldSystemFont(ofSize: 19)
+        label.textColor = UIColor(resource: .ypBlack)
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()
+    
+    // MARK: - Init
     
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -367,13 +419,21 @@ final class CategoryHeaderView: UICollectionReusableView {
         setup()
     }
     
+    // MARK: - Setup
+    
     private func setup() {
         addSubview(titleLabel)
         NSLayoutConstraint.activate([
-            titleLabel.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 16),
+            titleLabel.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 28),
             titleLabel.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -16),
-            titleLabel.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -8),
-            titleLabel.topAnchor.constraint(equalTo: topAnchor, constant: 0)
+            titleLabel.topAnchor.constraint(equalTo: topAnchor, constant: 0),
+            titleLabel.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -0)
         ])
+    }
+    
+    // MARK: - Configuration
+    
+    func configure(with text: String) {
+        titleLabel.text = text
     }
 }

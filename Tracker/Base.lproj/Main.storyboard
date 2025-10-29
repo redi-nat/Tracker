@@ -46,27 +46,8 @@
                     <view key="view" contentMode="scaleToFill" id="DXN-XG-6vT">
                         <rect key="frame" x="0.0" y="0.0" width="393" height="852"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                        <subviews>
-                            <navigationBar autoresizesSubviews="NO" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="5DQ-JC-WaC">
-                                <rect key="frame" x="0.0" y="0.0" width="393" height="182"/>
-                                <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                <constraints>
-                                    <constraint firstAttribute="height" constant="182" id="gLd-pV-FrF"/>
-                                </constraints>
-                                <color key="tintColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                <color key="barTintColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                <items>
-                                    <navigationItem title="Title" id="kBd-WZ-P7h"/>
-                                </items>
-                            </navigationBar>
-                        </subviews>
                         <viewLayoutGuide key="safeArea" id="ElL-La-M8w"/>
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
-                        <constraints>
-                            <constraint firstItem="5DQ-JC-WaC" firstAttribute="leading" secondItem="DXN-XG-6vT" secondAttribute="leading" id="5le-S3-IPL"/>
-                            <constraint firstAttribute="trailing" secondItem="5DQ-JC-WaC" secondAttribute="trailing" id="Uzx-bz-Jpj"/>
-                            <constraint firstItem="5DQ-JC-WaC" firstAttribute="top" secondItem="DXN-XG-6vT" secondAttribute="top" id="prM-WR-z5W"/>
-                        </constraints>
                     </view>
                     <tabBarItem key="tabBarItem" title="Трекеры" image="TrackerTabBar" id="bTD-VP-K3j"/>
                     <toolbarItems/>

@@ -23,7 +23,7 @@ final class ScheduleViewController: UIViewController {
     
     private let tableView: UITableView = {
         let tv = UITableView(frame: .zero, style: .plain)
-        tv.backgroundColor = UIColor(named: "ypBackgroundGray")
+        tv.backgroundColor = UIColor(resource: .ypBackgroundGray)
         tv.layer.cornerRadius = 16
         tv.separatorInset = UIEdgeInsets(top: 0, left: 16, bottom: 0, right: 16)
         tv.translatesAutoresizingMaskIntoConstraints = false
@@ -106,23 +106,40 @@ extension ScheduleViewController: UITableViewDataSource, UITableViewDelegate {
                    cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath)
         cell.selectionStyle = .none
-        cell.backgroundColor = UIColor(named: "ypBackgroundGray")
+        cell.backgroundColor = UIColor(resource: .ypBackgroundGray)
         cell.textLabel?.text = weekdays[indexPath.row]
         cell.textLabel?.font = UIFont.systemFont(ofSize: 17)
         
-        let weekdayEnum = TrackerSchedule.Weekday(rawValue: indexPath.row + 1)!
-        
+        guard let weekdayEnum = TrackerSchedule.Weekday(rawValue: indexPath.row + 1) else {
+            return cell
+        }
+
         let switchView = UISwitch()
         switchView.isOn = selectedDays.contains(weekdayEnum)
+        switchView.onTintColor = .systemBlue
         switchView.tag = indexPath.row
         switchView.addTarget(self, action: #selector(switchChanged(_:)), for: .valueChanged)
         
         cell.accessoryView = switchView
         return cell
     }
-    
+
+    func tableView(_ tableView: UITableView,
+                   willDisplay cell: UITableViewCell,
+                   forRowAt indexPath: IndexPath) {
+        if indexPath.row == weekdays.count - 1 {
+            cell.separatorInset = UIEdgeInsets(top: 0, left: 0, bottom: 0, right: .greatestFiniteMagnitude)
+            cell.preservesSuperviewLayoutMargins = false
+            cell.layoutMargins = UIEdgeInsets.zero
+        } else {
+            cell.separatorInset = UIEdgeInsets(top: 0, left: 16, bottom: 0, right: 16)
+            cell.preservesSuperviewLayoutMargins = false
+            cell.layoutMargins = UIEdgeInsets.zero
+        }
+    }
+
     @objc private func switchChanged(_ sender: UISwitch) {
-        let weekdayEnum = TrackerSchedule.Weekday(rawValue: sender.tag + 1)!
+        guard let weekdayEnum = TrackerSchedule.Weekday(rawValue: sender.tag + 1) else { return }
         if sender.isOn {
             selectedDays.append(weekdayEnum)
         } else {
