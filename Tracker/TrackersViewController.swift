@@ -121,7 +121,7 @@ final class TrackersViewController: UIViewController {
             NSLayoutConstraint.activate([
                 datePicker.topAnchor.constraint(equalTo: view.topAnchor, constant: 49),
                 datePicker.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -16),
-                datePicker.widthAnchor.constraint(equalToConstant: 77),
+                datePicker.widthAnchor.constraint(equalToConstant: 100),
                 datePicker.heightAnchor.constraint(equalToConstant: 34)
             ])
             
@@ -134,7 +134,7 @@ final class TrackersViewController: UIViewController {
                 let formatter = DateFormatter()
                 formatter.dateFormat = "dd.MM.yy"
                 textField.text = formatter.string(from: datePicker.date)
-                textField.textAlignment = .left
+                textField.font = UIFont.systemFont(ofSize: 17)
             }
         }
 

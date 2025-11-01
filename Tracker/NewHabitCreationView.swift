@@ -149,6 +149,24 @@ final class NewHabitCreationViewController: UIViewController {
         tableView.register(UITableViewCell.self, forCellReuseIdentifier: cellIdentifier)
     }
     
+    private func updateCreateButtonState() {
+        guard let text = nameTextField.text else { return }
+        
+        let isValid = !text.trimmingCharacters(in: .whitespaces).isEmpty && text.count <= 38
+        
+        UIView.animate(withDuration: 0.25) {
+            if isValid {
+                self.createButton.backgroundColor = UIColor(resource: .ypBlack)
+                self.createButton.setTitleColor(.white, for: .normal)
+                self.createButton.isEnabled = true
+            } else {
+                self.createButton.backgroundColor = UIColor(resource: .ypGray3)
+                self.createButton.setTitleColor(.white, for: .normal)
+                self.createButton.isEnabled = false
+            }
+        }
+    }
+    
     // MARK: - Actions
     
     @objc private func textFieldDidChange(_ textField: UITextField) {
@@ -160,11 +178,12 @@ final class NewHabitCreationViewController: UIViewController {
             errorLabel.isHidden = true
         }
         
-        // Изменяем констрейнт
         tableViewTopConstraint?.constant = errorLabel.isHidden ? 24 : 62
         UIView.animate(withDuration: 0.25) {
             self.view.layoutIfNeeded()
         }
+        
+        updateCreateButtonState()
     }
     
     @objc private func cancelTapped() {

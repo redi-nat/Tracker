@@ -28,7 +28,7 @@
             <objects>
                 <viewController storyboardIdentifier="StatisticsViewController" id="ctt-uL-L09" userLabel="Statistics View" customClass="StatisticsViewController" customModule="Tracker" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="Ijj-RD-N6P">
-                        <rect key="frame" x="0.0" y="0.0" width="393" height="852"/>
+                        <rect key="frame" x="0.0" y="0.0" width="393" height="735"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <viewLayoutGuide key="safeArea" id="Rwe-Xe-0ff"/>
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
@@ -44,7 +44,7 @@
             <objects>
                 <viewController storyboardIdentifier="TrackersViewController" id="oHl-Pr-OcT" userLabel="Tracker View" customClass="TrackersViewController" customModule="Tracker" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="DXN-XG-6vT">
-                        <rect key="frame" x="0.0" y="0.0" width="393" height="852"/>
+                        <rect key="frame" x="0.0" y="0.0" width="393" height="735"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <viewLayoutGuide key="safeArea" id="ElL-La-M8w"/>
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
@@ -57,14 +57,14 @@
             </objects>
             <point key="canvasLocation" x="-1532" y="-1128"/>
         </scene>
-        <!--Tab Bar Controller-->
+        <!--Main Tab Bar Controller-->
         <scene sceneID="IjW-jk-mW0">
             <objects>
-                <tabBarController id="YS4-wg-aIs" sceneMemberID="viewController">
-                    <tabBar key="tabBar" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" id="YYs-Co-y3P">
+                <tabBarController id="YS4-wg-aIs" customClass="MainTabBarController" customModule="Tracker" sceneMemberID="viewController">
+                    <tabBar key="tabBar" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" translucent="NO" id="YYs-Co-y3P">
                         <rect key="frame" x="0.0" y="0.0" width="393" height="49"/>
                         <autoresizingMask key="autoresizingMask"/>
-                        <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                        <tabBarAppearance key="standardAppearance"/>
                     </tabBar>
                     <connections>
                         <segue destination="oHl-Pr-OcT" kind="relationship" relationship="viewControllers" id="Vbf-Wz-KWm"/>

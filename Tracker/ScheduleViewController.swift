@@ -32,14 +32,14 @@ final class ScheduleViewController: UIViewController {
     }()
     
     private let doneButton: UIButton = {
-            let btn = UIButton(type: .system)
-            btn.setTitle("Готово", for: .normal)
-            btn.setTitleColor(.white, for: .normal)
-            btn.backgroundColor = .black
-            btn.layer.cornerRadius = 16
-            btn.translatesAutoresizingMaskIntoConstraints = false
-            return btn
-        }()
+        let btn = UIButton(type: .system)
+        btn.setTitle("Готово", for: .normal)
+        btn.setTitleColor(.white, for: .normal)
+        btn.backgroundColor = UIColor(resource: .ypBlack)
+        btn.layer.cornerRadius = 16
+        btn.translatesAutoresizingMaskIntoConstraints = false
+        return btn
+    }()
     
     // MARK: - Lifecycle
     
@@ -60,17 +60,14 @@ final class ScheduleViewController: UIViewController {
         view.addSubview(doneButton)
         
         NSLayoutConstraint.activate([
-            // Заголовок
             titleLabel.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 28),
             titleLabel.centerXAnchor.constraint(equalTo: view.centerXAnchor),
             
-            // Кнопка Готово
             doneButton.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 16),
             doneButton.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -16),
             doneButton.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -20),
             doneButton.heightAnchor.constraint(equalToConstant: 60),
             
-            // Таблица
             tableView.topAnchor.constraint(equalTo: titleLabel.bottomAnchor, constant: 24),
             tableView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 16),
             tableView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -16),
@@ -85,9 +82,9 @@ final class ScheduleViewController: UIViewController {
     }
     
     @objc private func doneTapped() {
-            onSave?(selectedDays)
-            dismiss(animated: true)
-        }
+        onSave?(selectedDays)
+        dismiss(animated: true)
+    }
 }
 
 // MARK: - UITableViewDataSource & Delegate
@@ -109,6 +106,7 @@ extension ScheduleViewController: UITableViewDataSource, UITableViewDelegate {
         cell.backgroundColor = UIColor(resource: .ypBackgroundGray)
         cell.textLabel?.text = weekdays[indexPath.row]
         cell.textLabel?.font = UIFont.systemFont(ofSize: 17)
+        cell.textLabel?.textAlignment = .left
         
         guard let weekdayEnum = TrackerSchedule.Weekday(rawValue: indexPath.row + 1) else {
             return cell
@@ -121,21 +119,24 @@ extension ScheduleViewController: UITableViewDataSource, UITableViewDelegate {
         switchView.addTarget(self, action: #selector(switchChanged(_:)), for: .valueChanged)
         
         cell.accessoryView = switchView
+        
+        let accessoryWidth = cell.accessoryView?.frame.width ?? 0
+        cell.textLabel?.frame = CGRect(
+            x: 16,
+            y: 0,
+            width: cell.contentView.frame.width - 32 - accessoryWidth,
+            height: cell.contentView.frame.height
+        )
+        
         return cell
     }
 
     func tableView(_ tableView: UITableView,
                    willDisplay cell: UITableViewCell,
                    forRowAt indexPath: IndexPath) {
-        if indexPath.row == weekdays.count - 1 {
-            cell.separatorInset = UIEdgeInsets(top: 0, left: 0, bottom: 0, right: .greatestFiniteMagnitude)
-            cell.preservesSuperviewLayoutMargins = false
-            cell.layoutMargins = UIEdgeInsets.zero
-        } else {
-            cell.separatorInset = UIEdgeInsets(top: 0, left: 16, bottom: 0, right: 16)
-            cell.preservesSuperviewLayoutMargins = false
-            cell.layoutMargins = UIEdgeInsets.zero
-        }
+        cell.preservesSuperviewLayoutMargins = false
+        cell.layoutMargins = UIEdgeInsets.zero
+        cell.separatorInset = UIEdgeInsets(top: 0, left: 16, bottom: 0, right: 16)
     }
 
     @objc private func switchChanged(_ sender: UISwitch) {
