@@ -152,7 +152,11 @@ final class NewHabitCreationViewController: UIViewController {
     private func updateCreateButtonState() {
         guard let text = nameTextField.text else { return }
         
-        let isValid = !text.trimmingCharacters(in: .whitespaces).isEmpty && text.count <= 38
+        let isNameValid = !text.trimmingCharacters(in: .whitespaces).isEmpty && text.count <= 38
+        
+        let isScheduleSelected = (selectedSchedule?.days.isEmpty == false)
+        
+        let isValid = isNameValid && isScheduleSelected
         
         UIView.animate(withDuration: 0.25) {
             if isValid {
@@ -243,9 +247,7 @@ extension NewHabitCreationViewController: UITableViewDataSource, UITableViewDele
             config.secondaryTextProperties.font = UIFont.systemFont(ofSize: 15)
             config.secondaryTextProperties.color = .gray
         }
-        
-        cell.contentConfiguration = config
-        
+                
         config.textProperties.font = UIFont.systemFont(ofSize: 17)
         cell.contentConfiguration = config
         cell.accessoryType = .disclosureIndicator
@@ -285,13 +287,19 @@ extension NewHabitCreationViewController: UITableViewDataSource, UITableViewDele
             scheduleVC.onSave = { [weak self] selectedDays in
                 guard let self = self else { return }
                 
-                self.selectedSchedule = TrackerSchedule(days: selectedDays)
-                self.tableView.reloadRows(at: [indexPath], with: .none) }
-            
+                if !selectedDays.isEmpty {
+                    self.selectedSchedule = TrackerSchedule(days: selectedDays)
+                } else {
+                    self.selectedSchedule = nil
+                }
+                
+                self.tableView.reloadRows(at: [indexPath], with: .none)
+                self.updateCreateButtonState()
+            }
             present(scheduleVC, animated: true)
         } else {
-            // переход к экрану категория
+            // переход к экрану категории
         }
     }
-    
 }
+
