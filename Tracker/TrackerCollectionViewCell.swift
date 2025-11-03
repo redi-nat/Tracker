@@ -141,7 +141,7 @@ final class TrackerCollectionViewCell: UICollectionViewCell {
             countLabel.leadingAnchor.constraint(equalTo: quantityView.leadingAnchor, constant: 12),
             
             plusButton.centerYAnchor.constraint(equalTo: quantityView.centerYAnchor),
-            plusButton.leadingAnchor.constraint(equalTo: quantityView.leadingAnchor, constant: 121),
+            plusButton.trailingAnchor.constraint(equalTo: quantityView.trailingAnchor, constant: -12),
             plusButton.widthAnchor.constraint(equalToConstant: 34),
             plusButton.heightAnchor.constraint(equalToConstant: 34)
             
