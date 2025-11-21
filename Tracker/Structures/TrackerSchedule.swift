@@ -1,10 +1,10 @@
 import Foundation
 import UIKit
 
-struct TrackerSchedule {
+struct TrackerSchedule: Codable {
     let days: [Weekday]
     
-    enum Weekday: Int {
+    enum Weekday: Int, Codable {
         case monday = 1, tuesday, wednesday, thursday, friday, saturday, sunday
     }
 }
