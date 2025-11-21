@@ -101,13 +101,13 @@ final class NewHabitCreationViewController: UIViewController {
         return cv
     }()
     
-    private let emojis = ["😀", "🥳", "😎", "❤️", "🔥", "🌿", "🐱", "🐶", "🍎", "🍔", "🎧", "✈️", "🎯", "📚", "💡", "🎵", "🚀", "🍕"]
+    private let emojis = ["🙂", "😻", "🌺", "🐶", "❤️", "😱", "😇", "😡", "🥶", "🤔", "🙌", "🍔", "🥦", "🏓", "🥇", "🎸", "🏝", "😪"]
     
     private let colors: [UIColor] = [
-        .systemRed, .systemOrange, .systemYellow, .systemGreen, .systemBlue,
-        .systemTeal, .systemIndigo, .systemPurple, .systemPink, .brown,
-        .gray, .black, .magenta, .systemCyan, .systemMint, .systemBrown,
-        .systemGray2, .systemGray3
+        .choice1, .choice2, .choice3, .choice4, .choice5,
+        .choice6, .choice7, .choice8, .choice9, .choice10,
+        .choice11, .choice12, .choice13, .choice14, .choice15, .choice16,
+        .choice17, .choice18
     ]
     
     private var selectedEmoji: String?
