@@ -197,25 +197,23 @@ final class NewHabitCreationViewController: UIViewController {
             // Emoji
             emojiLabel.topAnchor.constraint(equalTo: tableView.bottomAnchor, constant: 32),
             emojiLabel.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 28),
-            emojiCollectionView.topAnchor.constraint(equalTo: emojiLabel.bottomAnchor),
-            emojiCollectionView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 16),
+            emojiCollectionView.topAnchor.constraint(equalTo: emojiLabel.bottomAnchor, constant: 8),            emojiCollectionView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 16),
             emojiCollectionView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -16),
             emojiCollectionView.heightAnchor.constraint(equalToConstant: 204),
             
             // Colors
-            colorLabel.topAnchor.constraint(equalTo: emojiCollectionView.bottomAnchor),
+            colorLabel.topAnchor.constraint(equalTo: emojiCollectionView.bottomAnchor, constant: 0),
             colorLabel.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 28),
-            colorCollectionView.topAnchor.constraint(equalTo: colorLabel.bottomAnchor),
-            colorCollectionView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 16),
+            colorCollectionView.topAnchor.constraint(equalTo: colorLabel.bottomAnchor, constant: 8),            colorCollectionView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 16),
             colorCollectionView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -16),
             colorCollectionView.heightAnchor.constraint(equalToConstant: 204),
             
             // Кнопки
-            cancelButton.topAnchor.constraint(equalTo: colorCollectionView.bottomAnchor),
+            cancelButton.topAnchor.constraint(equalTo: colorCollectionView.bottomAnchor, constant: 16),
             cancelButton.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 20),
             cancelButton.widthAnchor.constraint(equalToConstant: 166),
             cancelButton.heightAnchor.constraint(equalToConstant: 60),
-            createButton.topAnchor.constraint(equalTo: colorCollectionView.bottomAnchor),
+            createButton.topAnchor.constraint(equalTo: colorCollectionView.bottomAnchor, constant: 16),
             createButton.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -20),
             createButton.widthAnchor.constraint(equalToConstant: 166),
             createButton.heightAnchor.constraint(equalToConstant: 60),
@@ -509,7 +507,7 @@ extension NewHabitCreationViewController: UICollectionViewDelegateFlowLayout {
         return 0
     }
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, insetForSectionAt section: Int) -> UIEdgeInsets {
-            return UIEdgeInsets(top: 24, left: 0, bottom: 5, right: 0)
-        }
+        return UIEdgeInsets(top: 24, left: 0, bottom: 5, right: 0)
+    }
 }
 
