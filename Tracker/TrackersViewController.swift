@@ -7,8 +7,7 @@ final class TrackersViewController: UIViewController {
     // MARK: - Properties
     
     private var categories: [TrackerCategory] = []
-    private var completedTrackers: [TrackerRecord] = []
-    private var selectedDate = Date()
+    private var selectedDate = Calendar.current.startOfDay(for: Date())
     private var displayedCategories: [TrackerCategory] = []
     
     // MARK: - UI Components
@@ -99,6 +98,10 @@ final class TrackersViewController: UIViewController {
         
         TrackerStore.shared.onDidUpdate = { [weak self] in
             self?.loadTrackers()
+        }
+        
+        TrackerRecordStore.shared.onDidUpdate = { [weak self] in
+            self?.updateTrackers(for: self?.selectedDate ?? Date())
         }
         
         loadTrackers()
@@ -201,7 +204,6 @@ final class TrackersViewController: UIViewController {
     
     private func loadTrackers() {
         categories = TrackerStore.shared.fetchCategories()
-        completedTrackers = TrackerRecordStore.shared.fetchRecords(for: selectedDate)
         updateTrackers(for: selectedDate)
     }
     
@@ -234,7 +236,7 @@ final class TrackersViewController: UIViewController {
     // MARK: - Actions
     
     @objc private func dateChanged(_ sender: UIDatePicker) {
-        selectedDate = sender.date
+        selectedDate = getNormalizedDate(sender.date)
         updateDatePickerText()
         updateTrackers(for: selectedDate)
     }
@@ -255,23 +257,28 @@ final class TrackersViewController: UIViewController {
     
     // MARK: - Tracker Completion
     
+    func getNormalizedDate(_ date: Date) -> Date {
+        var calendar = Calendar.current
+        calendar.timeZone = TimeZone(secondsFromGMT: 0)!
+        return calendar.startOfDay(for: date)
+    }
+        
     func completeTracker(_ tracker: Tracker, for date: Date) {
-        let record = TrackerRecord(trackerId: tracker.id, date: date)
+        let normalizedDate = getNormalizedDate(date)
+        let record = TrackerRecord(trackerId: tracker.id, date: normalizedDate)
         TrackerRecordStore.shared.addRecord(record)
-        completedTrackers.append(record)
     }
-    
+
     func uncompleteTracker(_ tracker: Tracker, for date: Date) {
-        if let record = completedTrackers.first(where: { $0.trackerId == tracker.id && Calendar.current.isDate($0.date, inSameDayAs: date) }) {
-            TrackerRecordStore.shared.removeRecord(record)
-            completedTrackers.removeAll { $0.trackerId == record.trackerId && Calendar.current.isDate($0.date, inSameDayAs: record.date) }
-        }
+        let normalizedDate = getNormalizedDate(date)
+        let record = TrackerRecord(trackerId: tracker.id, date: normalizedDate)
+        TrackerRecordStore.shared.removeRecord(record)
     }
-    
+
     func isTrackerCompleted(_ tracker: Tracker, on date: Date) -> Bool {
-        completedTrackers.contains {
-            $0.trackerId == tracker.id && Calendar.current.isDate($0.date, inSameDayAs: date)
-        }
+        let normalizedDate = getNormalizedDate(date)
+        let isCompleted = !TrackerRecordStore.shared.fetchRecords(for: normalizedDate, trackerId: tracker.id).isEmpty
+        return isCompleted
     }
 }
 
@@ -296,7 +303,7 @@ extension TrackersViewController: UICollectionViewDataSource, UICollectionViewDe
         ) as? TrackerCollectionViewCell else { return UICollectionViewCell() }
         
         let isCompleted = isTrackerCompleted(tracker, on: selectedDate)
-        let count = completedTrackers.filter { $0.trackerId == tracker.id }.count
+        let count = TrackerRecordStore.shared.fetchAllRecords(for: tracker.id).count
         let isFuture = Calendar.current.compare(selectedDate, to: Date(), toGranularity: .day) == .orderedDescending
         
         cell.configure(with: tracker, count: count, isCompleted: isCompleted, isFuture: isFuture)
@@ -309,7 +316,6 @@ extension TrackersViewController: UICollectionViewDataSource, UICollectionViewDe
             } else {
                 self.completeTracker(tracker, for: self.selectedDate)
             }
-            self.collectionView.reloadItems(at: [indexPath])
         }
         return cell
     }

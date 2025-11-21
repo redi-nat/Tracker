@@ -11,27 +11,23 @@ final class CoreDataStack {
     lazy var persistentContainer: NSPersistentContainer = {
         let container = NSPersistentContainer(name: "TrackerDataModel")
 
-        // MARK: - 3 Store
-        let trackerStore = NSPersistentStoreDescription(url: storeURL(fileName: "Tracker.sqlite"))
-        let categoryStore = NSPersistentStoreDescription(url: storeURL(fileName: "Category.sqlite"))
-        let recordStore = NSPersistentStoreDescription(url: storeURL(fileName: "Record.sqlite"))
-
-        container.persistentStoreDescriptions = [
-            trackerStore,
-            categoryStore,
-            recordStore
-        ]
+        if let storeDescription = container.persistentStoreDescriptions.first {
+            storeDescription.shouldMigrateStoreAutomatically = true
+            storeDescription.shouldInferMappingModelAutomatically = true
+        }
 
         container.loadPersistentStores { storeDescription, error in
             if let error = error {
                 fatalError("❌ Ошибка загрузки хранилища: \(error)")
             } else {
-                print("Loaded store: \(storeDescription.url?.lastPathComponent ?? "")")
+                print("Хранилище загружено: \(storeDescription.url?.lastPathComponent ?? "")")
             }
         }
 
+        container.viewContext.mergePolicy = NSMergeByPropertyObjectTrumpMergePolicy
         return container
     }()
+
 
     // MARK: - Context для работы
     var context: NSManagedObjectContext {
@@ -52,9 +48,11 @@ final class CoreDataStack {
 
     // MARK: - Path helper
     private func storeURL(fileName: String) -> URL {
-        let storeFolder = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first!
-        return storeFolder.appendingPathComponent(fileName)
-    }
+            guard let folder = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first else {
+                fatalError("❌ Document directory not found")
+            }
+            return folder.appendingPathComponent(fileName)
+        }
 }
 
 extension TrackerCoreData {

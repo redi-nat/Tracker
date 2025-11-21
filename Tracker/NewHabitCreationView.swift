@@ -75,8 +75,8 @@ final class NewHabitCreationViewController: UIViewController {
     
     private let emojiCollectionView: UICollectionView = {
         let layout = UICollectionViewFlowLayout()
-        layout.minimumLineSpacing = 0
-        layout.minimumInteritemSpacing = 0
+        layout.minimumLineSpacing = 5
+        layout.minimumInteritemSpacing = 5
         let cv = UICollectionView(frame: .zero, collectionViewLayout: layout)
         cv.backgroundColor = .clear
         cv.translatesAutoresizingMaskIntoConstraints = false
@@ -93,8 +93,8 @@ final class NewHabitCreationViewController: UIViewController {
     
     private let colorCollectionView: UICollectionView = {
         let layout = UICollectionViewFlowLayout()
-        layout.minimumLineSpacing = 0
-        layout.minimumInteritemSpacing = 0
+        layout.minimumLineSpacing = 5
+        layout.minimumInteritemSpacing = 5
         let cv = UICollectionView(frame: .zero, collectionViewLayout: layout)
         cv.backgroundColor = .clear
         cv.translatesAutoresizingMaskIntoConstraints = false
@@ -197,25 +197,25 @@ final class NewHabitCreationViewController: UIViewController {
             // Emoji
             emojiLabel.topAnchor.constraint(equalTo: tableView.bottomAnchor, constant: 32),
             emojiLabel.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 28),
-            emojiCollectionView.topAnchor.constraint(equalTo: emojiLabel.bottomAnchor, constant: 8),
-            emojiCollectionView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 18),
-            emojiCollectionView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -18),
-            emojiCollectionView.heightAnchor.constraint(equalToConstant: 156),
+            emojiCollectionView.topAnchor.constraint(equalTo: emojiLabel.bottomAnchor),
+            emojiCollectionView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 16),
+            emojiCollectionView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -16),
+            emojiCollectionView.heightAnchor.constraint(equalToConstant: 204),
             
             // Colors
-            colorLabel.topAnchor.constraint(equalTo: emojiCollectionView.bottomAnchor, constant: 32),
+            colorLabel.topAnchor.constraint(equalTo: emojiCollectionView.bottomAnchor),
             colorLabel.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 28),
-            colorCollectionView.topAnchor.constraint(equalTo: colorLabel.bottomAnchor, constant: 8),
-            colorCollectionView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 18),
-            colorCollectionView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -18),
-            colorCollectionView.heightAnchor.constraint(equalToConstant: 180),
+            colorCollectionView.topAnchor.constraint(equalTo: colorLabel.bottomAnchor),
+            colorCollectionView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 16),
+            colorCollectionView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -16),
+            colorCollectionView.heightAnchor.constraint(equalToConstant: 204),
             
             // Кнопки
-            cancelButton.topAnchor.constraint(equalTo: colorCollectionView.bottomAnchor, constant: 32),
+            cancelButton.topAnchor.constraint(equalTo: colorCollectionView.bottomAnchor),
             cancelButton.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 20),
             cancelButton.widthAnchor.constraint(equalToConstant: 166),
             cancelButton.heightAnchor.constraint(equalToConstant: 60),
-            createButton.topAnchor.constraint(equalTo: colorCollectionView.bottomAnchor, constant: 32),
+            createButton.topAnchor.constraint(equalTo: colorCollectionView.bottomAnchor),
             createButton.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -20),
             createButton.widthAnchor.constraint(equalToConstant: 166),
             createButton.heightAnchor.constraint(equalToConstant: 60),
@@ -401,23 +401,58 @@ extension NewHabitCreationViewController: UITableViewDataSource, UITableViewDele
     final class ColorCell: UICollectionViewCell {
         static let reuseId = "ColorCell"
         private let colorView = UIView()
+        private let selectionIndicatorView: UIView = {
+            let view = UIView()
+            view.layer.cornerRadius = 8
+            view.layer.masksToBounds = true
+            view.layer.borderWidth = 3
+            view.translatesAutoresizingMaskIntoConstraints = false
+            view.alpha = 0
+            return view
+        }()
+        
         override init(frame: CGRect) {
             super.init(frame: frame)
             colorView.layer.cornerRadius = 8
             colorView.translatesAutoresizingMaskIntoConstraints = false
+            contentView.addSubview(selectionIndicatorView)
             contentView.addSubview(colorView)
             NSLayoutConstraint.activate([
+                
+                selectionIndicatorView.centerXAnchor.constraint(equalTo: contentView.centerXAnchor),
+                selectionIndicatorView.centerYAnchor.constraint(equalTo: contentView.centerYAnchor),
+                selectionIndicatorView.widthAnchor.constraint(equalToConstant: 52),
+                selectionIndicatorView.heightAnchor.constraint(equalToConstant: 52),
+                
+                
                 colorView.centerXAnchor.constraint(equalTo: contentView.centerXAnchor),
                 colorView.centerYAnchor.constraint(equalTo: contentView.centerYAnchor),
                 colorView.widthAnchor.constraint(equalToConstant: 40),
                 colorView.heightAnchor.constraint(equalToConstant: 40)
             ])
         }
+        
         required init?(coder: NSCoder) { fatalError() }
+        
+        override func prepareForReuse() {
+            super.prepareForReuse()
+            selectionIndicatorView.alpha = 0
+            selectionIndicatorView.layer.borderColor = nil
+        }
+        
         func configure(with color: UIColor, selected: Bool) {
             colorView.backgroundColor = color
-            contentView.layer.borderWidth = selected ? 3 : 0
-            contentView.layer.borderColor = selected ? color.cgColor : nil
+            
+            if selected {
+                let borderColorWithAlpha = color.withAlphaComponent(0.3)
+                selectionIndicatorView.layer.borderColor = borderColorWithAlpha.cgColor
+                
+                selectionIndicatorView.alpha = 1.0
+            } else {
+                selectionIndicatorView.alpha = 0
+            }
+            
+            colorView.layer.borderWidth = 0
         }
     }
 }
@@ -461,17 +496,20 @@ extension NewHabitCreationViewController: UICollectionViewDataSource, UICollecti
 extension NewHabitCreationViewController: UICollectionViewDelegateFlowLayout {
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
         let itemsPerRow: CGFloat = 6
-        let sectionInsets: CGFloat = 18 * 2
-        let interItemSpacing: CGFloat = 8 * (itemsPerRow - 1)
-        let availableWidth = view.bounds.width - sectionInsets - interItemSpacing
+        let totalHorizontalPadding: CGFloat = 32.0
+        let interItemSpacing: CGFloat = 5.0
+        let availableWidth = view.bounds.width - totalHorizontalPadding - (interItemSpacing * (itemsPerRow - 1))
         let itemWidth = floor(availableWidth / itemsPerRow)
         return CGSize(width: itemWidth, height: itemWidth)
     }
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumInteritemSpacingForSectionAt section: Int) -> CGFloat {
-        return 8
+        return 5
     }
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumLineSpacingForSectionAt section: Int) -> CGFloat {
         return 0
     }
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, insetForSectionAt section: Int) -> UIEdgeInsets {
+            return UIEdgeInsets(top: 24, left: 0, bottom: 5, right: 0)
+        }
 }
 
