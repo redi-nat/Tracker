@@ -105,6 +105,10 @@ final class TrackersViewController: UIViewController {
             self?.updateTrackers(for: self?.selectedDate ?? Date())
         }
         
+        TrackerCategoryStore.shared.onDidUpdate = { [weak self] _ in
+                self?.loadTrackers()
+            }
+        
         loadTrackers()
     }
     
