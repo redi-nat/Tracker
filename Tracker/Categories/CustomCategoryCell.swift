@@ -23,7 +23,7 @@ final class CustomCategoryCell: UITableViewCell {
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
-
+    
     func configure(with title: String) {
         titleLabel.text = title
     }

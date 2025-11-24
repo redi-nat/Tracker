@@ -70,8 +70,9 @@ final class CategoryListViewController: UIViewController {
         super.init(nibName: nil, bundle: nil)
     }
     
+    @available(*, unavailable)
     required init?(coder: NSCoder) {
-        fatalError("init(coder:) not implemented")
+        return nil
     }
     
     // MARK: - Lifecycle
@@ -93,7 +94,7 @@ final class CategoryListViewController: UIViewController {
         
         viewModel.onUpdate = { [weak self] in
             DispatchQueue.main.async {
-                guard let self = self else { return }
+                guard let self else { return }
                 
                 self.categoryTitles = self.viewModel.getAllCategoryTitles()
                 
@@ -209,7 +210,7 @@ final class CategoryListViewController: UIViewController {
 extension CategoryListViewController: UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return viewModel.numberOfCategories()
+        viewModel.numberOfCategories()
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {

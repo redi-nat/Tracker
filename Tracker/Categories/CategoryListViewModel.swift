@@ -12,8 +12,8 @@ final class CategoryListViewModel {
     private(set) var selectedCategoryIndexPath: IndexPath?
     
     var store: TrackerCategoryStore {
-            return categoryStore
-        }
+        return categoryStore
+    }
     // MARK: - Data
     
     private var categories: [TrackerCategory] = []
@@ -29,15 +29,15 @@ final class CategoryListViewModel {
         loadCategories()
     }
     
-    // MARK: - Public API 
+    // MARK: - Public API
     
     func loadCategories() {
         categories = categoryStore.fetchCategories()
     }
     
     func getAllCategoryTitles() -> [String] {
-            return categories.map { $0.title }
-        }
+        return categories.map { $0.title }
+    }
     
     func categoryTitle(at indexPath: IndexPath) -> String {
         return categories[indexPath.row].title
@@ -59,13 +59,12 @@ final class CategoryListViewModel {
         if let selectedIndexPath = selectedCategoryIndexPath {
             let selectedCategory = categories[selectedIndexPath.row]
             onCategorySelected?(selectedCategory)
-        } else {
         }
     }
     
     func isCategorySelected(at indexPath: IndexPath) -> Bool {
-            return selectedCategoryIndexPath == indexPath
-        }
+        return selectedCategoryIndexPath == indexPath
+    }
     
     func addCategory(_ category: TrackerCategory) {
         categoryStore.addCategory(category)

@@ -29,8 +29,9 @@ final class OnboardingViewController: UIPageViewController {
         super.init(transitionStyle: .scroll, navigationOrientation: .horizontal, options: nil)
     }
     
+    @available(*, unavailable)
     required init?(coder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
+        return nil
     }
     
     // MARK: - Lifecycle
@@ -84,13 +85,20 @@ final class OnboardingViewController: UIPageViewController {
     // MARK: - Actions
     
     @objc private func didTapDoneButton() {
-        UserDefaults.standard.set(true, forKey: "hasCompletedOnboarding")
-        let trackersVC = TrackersViewController()
+        UserDefaultsService.shared.hasCompletedOnboarding = true
+        let tabBarVC = MainTabBarController()
+        
         guard let window = self.view.window else {
-            dismiss(animated: true)
             return
         }
-        window.rootViewController = trackersVC
+        
+        window.rootViewController = tabBarVC
+        
+        UIView.transition(with: window,
+                          duration: 0.3,
+                          options: .transitionCrossDissolve,
+                          animations: nil,
+                          completion: nil)
     }
     
     // MARK: - Helper
