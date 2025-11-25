@@ -93,8 +93,10 @@ final class TrackersViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        view.backgroundColor = .systemBackground
         setupUI()
         setupCollectionView()
+        setupNavigationBar()
         
         TrackerStore.shared.onDidUpdate = { [weak self] in
             self?.loadTrackers()
@@ -102,6 +104,10 @@ final class TrackersViewController: UIViewController {
         
         TrackerRecordStore.shared.onDidUpdate = { [weak self] in
             self?.updateTrackers(for: self?.selectedDate ?? Date())
+        }
+        
+        TrackerCategoryStore.shared.onDidUpdate = { [weak self] _ in
+            self?.loadTrackers()
         }
         
         loadTrackers()
@@ -113,47 +119,31 @@ final class TrackersViewController: UIViewController {
         view.addSubview(titleLabel)
         view.addSubview(searchTextField)
         view.addSubview(collectionView)
-        view.addSubview(datePicker)
-        view.addSubview(addButton)
         view.addSubview(emptyStateImageView)
         view.addSubview(emptyStateLabel)
         
-        setupDatePicker()
-        setupAddButton()
         setupEmptyState()
         setupConstraints()
     }
     
-    private func setupDatePicker() {
-        NSLayoutConstraint.activate([
-            datePicker.topAnchor.constraint(equalTo: view.topAnchor, constant: 49),
-            datePicker.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -16),
-            datePicker.widthAnchor.constraint(equalToConstant: 100),
-            datePicker.heightAnchor.constraint(equalToConstant: 34)
-        ])
+    private func setupNavigationBar() {
         
-        updateDatePickerText()
-        datePicker.addTarget(self, action: #selector(dateChanged(_:)), for: .valueChanged)
-    }
-    
-    private func updateDatePickerText() {
-        if let textField = datePicker.subviews.first?.subviews.first(where: { $0 is UITextField }) as? UITextField {
-            let formatter = DateFormatter()
-            formatter.dateFormat = "dd.MM.yy"
-            textField.text = formatter.string(from: datePicker.date)
-            textField.font = UIFont.systemFont(ofSize: 17)
-        }
-    }
-    
-    private func setupAddButton() {
-        NSLayoutConstraint.activate([
-            addButton.topAnchor.constraint(equalTo: view.topAnchor, constant: 45),
-            addButton.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 6),
-            addButton.widthAnchor.constraint(equalToConstant: 42),
-            addButton.heightAnchor.constraint(equalToConstant: 42)
-        ])
-        
+        addButton.removeTarget(nil, action: nil, for: .allEvents)
         addButton.addTarget(self, action: #selector(addTrackerButtonTapped(_:)), for: .touchUpInside)
+        
+        let leftBarButtonItem = UIBarButtonItem(customView: addButton)
+        leftBarButtonItem.customView?.widthAnchor.constraint(equalToConstant: 42).isActive = true
+        leftBarButtonItem.customView?.heightAnchor.constraint(equalToConstant: 42).isActive = true
+        
+        navigationItem.leftBarButtonItem = leftBarButtonItem
+        
+        datePicker.removeTarget(nil, action: nil, for: .allEvents)
+        datePicker.addTarget(self, action: #selector(dateChanged(_:)), for: .valueChanged)
+        
+        datePicker.widthAnchor.constraint(equalToConstant: 100).isActive = true
+        
+        let rightBarButtonItem = UIBarButtonItem(customView: datePicker)
+        navigationItem.rightBarButtonItem = rightBarButtonItem
     }
     
     private func setupEmptyState() {
@@ -237,7 +227,6 @@ final class TrackersViewController: UIViewController {
     
     @objc private func dateChanged(_ sender: UIDatePicker) {
         selectedDate = getNormalizedDate(sender.date)
-        updateDatePickerText()
         updateTrackers(for: selectedDate)
     }
     
@@ -245,7 +234,7 @@ final class TrackersViewController: UIViewController {
         let habitVC = NewHabitCreationViewController()
         
         habitVC.onCreate = { [weak self] tracker in
-            guard let self = self else { return }
+            guard let self else { return }
             
             TrackerStore.shared.addTracker(tracker)
         }
@@ -258,23 +247,22 @@ final class TrackersViewController: UIViewController {
     // MARK: - Tracker Completion
     
     func getNormalizedDate(_ date: Date) -> Date {
-        var calendar = Calendar.current
-        calendar.timeZone = TimeZone(secondsFromGMT: 0)!
+        let calendar = Calendar.current
         return calendar.startOfDay(for: date)
     }
-        
+    
     func completeTracker(_ tracker: Tracker, for date: Date) {
         let normalizedDate = getNormalizedDate(date)
         let record = TrackerRecord(trackerId: tracker.id, date: normalizedDate)
         TrackerRecordStore.shared.addRecord(record)
     }
-
+    
     func uncompleteTracker(_ tracker: Tracker, for date: Date) {
         let normalizedDate = getNormalizedDate(date)
         let record = TrackerRecord(trackerId: tracker.id, date: normalizedDate)
         TrackerRecordStore.shared.removeRecord(record)
     }
-
+    
     func isTrackerCompleted(_ tracker: Tracker, on date: Date) -> Bool {
         let normalizedDate = getNormalizedDate(date)
         let isCompleted = !TrackerRecordStore.shared.fetchRecords(for: normalizedDate, trackerId: tracker.id).isEmpty

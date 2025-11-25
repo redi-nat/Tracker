@@ -3,12 +3,16 @@ import Foundation
 
 final class StatisticsViewController: UIViewController {
     
+    init() {
+        super.init(nibName: nil, bundle: nil)
+    }
+    
+    @available(*, unavailable)
     required init?(coder: NSCoder) {
-        super.init(coder: coder)
+        return nil
     }
     
     override func viewDidLoad() {
         super.viewDidLoad()
-
     }
 }

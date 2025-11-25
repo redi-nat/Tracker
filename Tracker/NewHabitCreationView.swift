@@ -114,6 +114,7 @@ final class NewHabitCreationViewController: UIViewController {
     private var selectedColor: UIColor?
     
     // MARK: - Data
+    var selectedCategory: TrackerCategory?
     var selectedSchedule: TrackerSchedule? = nil
     var onCreate: ((Tracker) -> Void)?
     
@@ -197,25 +198,23 @@ final class NewHabitCreationViewController: UIViewController {
             // Emoji
             emojiLabel.topAnchor.constraint(equalTo: tableView.bottomAnchor, constant: 32),
             emojiLabel.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 28),
-            emojiCollectionView.topAnchor.constraint(equalTo: emojiLabel.bottomAnchor),
-            emojiCollectionView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 16),
+            emojiCollectionView.topAnchor.constraint(equalTo: emojiLabel.bottomAnchor, constant: 8),            emojiCollectionView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 16),
             emojiCollectionView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -16),
             emojiCollectionView.heightAnchor.constraint(equalToConstant: 204),
             
             // Colors
-            colorLabel.topAnchor.constraint(equalTo: emojiCollectionView.bottomAnchor),
+            colorLabel.topAnchor.constraint(equalTo: emojiCollectionView.bottomAnchor, constant: 0),
             colorLabel.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 28),
-            colorCollectionView.topAnchor.constraint(equalTo: colorLabel.bottomAnchor),
-            colorCollectionView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 16),
+            colorCollectionView.topAnchor.constraint(equalTo: colorLabel.bottomAnchor, constant: 8),            colorCollectionView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 16),
             colorCollectionView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -16),
             colorCollectionView.heightAnchor.constraint(equalToConstant: 204),
             
             // Кнопки
-            cancelButton.topAnchor.constraint(equalTo: colorCollectionView.bottomAnchor),
+            cancelButton.topAnchor.constraint(equalTo: colorCollectionView.bottomAnchor, constant: 16),
             cancelButton.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 20),
             cancelButton.widthAnchor.constraint(equalToConstant: 166),
             cancelButton.heightAnchor.constraint(equalToConstant: 60),
-            createButton.topAnchor.constraint(equalTo: colorCollectionView.bottomAnchor),
+            createButton.topAnchor.constraint(equalTo: colorCollectionView.bottomAnchor, constant: 16),
             createButton.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -20),
             createButton.widthAnchor.constraint(equalToConstant: 166),
             createButton.heightAnchor.constraint(equalToConstant: 60),
@@ -301,7 +300,7 @@ final class NewHabitCreationViewController: UIViewController {
             schedule: selectedSchedule
         )
         
-        TrackerStore.shared.addTracker(tracker)
+        TrackerStore.shared.addTracker(tracker, category: selectedCategory)
         TrackerStore.shared.printAllTrackers()
         dismiss(animated: true)
     }
@@ -324,26 +323,40 @@ extension NewHabitCreationViewController: UITableViewDataSource, UITableViewDele
         var config = cell.defaultContentConfiguration()
         config.text = tableItems[indexPath.row]
         config.textProperties.font = UIFont.systemFont(ofSize: 17)
+        
+        cell.contentView.subviews
+            .filter { $0.tag == 999 }
+            .forEach { $0.removeFromSuperview() }
+        
+        if indexPath.row == 0 {
+            if let selectedCategory = selectedCategory {
+                let categoryText = selectedCategory.title
+                config.secondaryText = categoryText
+                config.secondaryTextProperties.font = UIFont.systemFont(ofSize: 15)
+                config.secondaryTextProperties.color = .gray
+            }
+        }
+        
         if indexPath.row == 1, let selectedSchedule = selectedSchedule {
             let daysText = selectedSchedule.daysText
             config.secondaryText = daysText
             config.secondaryTextProperties.font = UIFont.systemFont(ofSize: 15)
             config.secondaryTextProperties.color = .gray
         }
-        config.textProperties.font = UIFont.systemFont(ofSize: 17)
+        
         cell.contentConfiguration = config
         cell.accessoryType = .disclosureIndicator
         cell.backgroundColor = UIColor(resource: .ypBackgroundGray)
         tableView.separatorStyle = .none
-        cell.contentView.subviews
-            .filter { $0.tag == 999 }
-            .forEach { $0.removeFromSuperview() }
+        
         if indexPath.row == 0 {
             let separator = UIView()
             separator.backgroundColor = UIColor.systemGray3
             separator.translatesAutoresizingMaskIntoConstraints = false
             separator.tag = 999
+            separator.isUserInteractionEnabled = false
             cell.contentView.addSubview(separator)
+            
             NSLayoutConstraint.activate([
                 separator.leadingAnchor.constraint(equalTo: cell.contentView.leadingAnchor, constant: 16),
                 separator.trailingAnchor.constraint(equalTo: cell.contentView.trailingAnchor),
@@ -372,7 +385,18 @@ extension NewHabitCreationViewController: UITableViewDataSource, UITableViewDele
             }
             present(scheduleVC, animated: true)
         } else {
-            // переход к экрану категории
+            let categoryStore = TrackerCategoryStore()
+            let viewModel = CategoryListViewModel(categoryStore: categoryStore)
+            
+            viewModel.onCategorySelected = { [weak self] category in
+                self?.selectedCategory = category
+                self?.tableView.reloadData()
+                self?.updateCreateButtonState()
+            }
+            
+            let categoryListVC = CategoryListViewController(viewModel: viewModel)
+            let nav = UINavigationController(rootViewController: categoryListVC)
+            present(nav, animated: true)
         }
     }
     
@@ -509,7 +533,7 @@ extension NewHabitCreationViewController: UICollectionViewDelegateFlowLayout {
         return 0
     }
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, insetForSectionAt section: Int) -> UIEdgeInsets {
-            return UIEdgeInsets(top: 24, left: 0, bottom: 5, right: 0)
-        }
+        return UIEdgeInsets(top: 24, left: 0, bottom: 5, right: 0)
+    }
 }
 
