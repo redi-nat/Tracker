@@ -14,6 +14,10 @@ final class TrackerCollectionViewCell: UICollectionViewCell {
         return view
     }()
     
+    internal var cardViewForPreview: UIView {
+        return cardView
+    }
+    
     private lazy var emojiLabel: UILabel = {
         let label = UILabel()
         label.font = .systemFont(ofSize: 16)
@@ -174,3 +178,4 @@ final class TrackerCollectionViewCell: UICollectionViewCell {
         plusButton.alpha = isFuture ? 0.5 : 1.0
     }
 }
+

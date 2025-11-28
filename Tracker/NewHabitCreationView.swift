@@ -1,15 +1,41 @@
 import UIKit
 
 final class NewHabitCreationViewController: UIViewController {
-    // MARK: - UI Elements
-    private var tableViewTopConstraint: NSLayoutConstraint?
     
-    private let titleLabel: UILabel = {
+    private var tableViewTopConstraint: NSLayoutConstraint?
+    private var nameTextFieldTopToTitleConstraint: NSLayoutConstraint?
+    private var nameTextFieldTopToCompletedDaysConstraint: NSLayoutConstraint?
+    private var trackerToEdit: Tracker?
+    private var originalCategory: TrackerCategory?
+    private var selectedColorHex: String?
+    private var completedDays: Int = 0
+    
+    // MARK: - Init
+    
+    init(trackerToEdit: Tracker? = nil, category: TrackerCategory? = nil) {
+        self.trackerToEdit = trackerToEdit
+        self.originalCategory = category
+        super.init(nibName: nil, bundle: nil)
+        
+        if trackerToEdit != nil {
+            title = "Редактирование привычки"
+        } else {
+            title = "Новая привычка"
+        }
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
+    // MARK: - UI Elements
+    
+    private lazy var completedDaysLabel: UILabel = {
         let label = UILabel()
-        label.text = "Новая привычка"
-        label.font = UIFont.systemFont(ofSize: 16)
-        label.textAlignment = .center
         label.translatesAutoresizingMaskIntoConstraints = false
+        label.font = .systemFont(ofSize: 32, weight: .bold)
+        label.textAlignment = .center
+        label.isHidden = true
         return label
     }()
     
@@ -133,6 +159,13 @@ final class NewHabitCreationViewController: UIViewController {
         let tapGesture = UITapGestureRecognizer(target: self, action: #selector(hideKeyboard))
         tapGesture.cancelsTouchesInView = false
         view.addGestureRecognizer(tapGesture)
+        
+        if let tracker = trackerToEdit {
+            setupForEditing(tracker: tracker, category: originalCategory, completedDays: completedDays)
+            nameTextFieldTopToCompletedDaysConstraint?.isActive = true
+        } else {
+            nameTextFieldTopToTitleConstraint?.isActive = true
+        }
     }
     
     // MARK: - Setup UI
@@ -146,7 +179,6 @@ final class NewHabitCreationViewController: UIViewController {
         scrollView.addSubview(contentView)
         
         // contentView
-        contentView.addSubview(titleLabel)
         contentView.addSubview(nameTextField)
         contentView.addSubview(errorLabel)
         contentView.addSubview(tableView)
@@ -156,6 +188,7 @@ final class NewHabitCreationViewController: UIViewController {
         contentView.addSubview(colorCollectionView)
         contentView.addSubview(cancelButton)
         contentView.addSubview(createButton)
+        contentView.addSubview(completedDaysLabel)
         
         // scrollView
         NSLayoutConstraint.activate([
@@ -172,14 +205,19 @@ final class NewHabitCreationViewController: UIViewController {
         
         // UI
         tableViewTopConstraint = tableView.topAnchor.constraint(equalTo: nameTextField.bottomAnchor, constant: 24)
+        nameTextFieldTopToTitleConstraint =
+        nameTextField.topAnchor.constraint(equalTo: contentView.safeAreaLayoutGuide.topAnchor, constant: 40)
+        
+        nameTextFieldTopToCompletedDaysConstraint =
+        nameTextField.topAnchor.constraint(equalTo: completedDaysLabel.bottomAnchor, constant: 24)
         NSLayoutConstraint.activate([
             
             // Заголовок
-            titleLabel.topAnchor.constraint(equalTo: contentView.topAnchor, constant: -22),
-            titleLabel.centerXAnchor.constraint(equalTo: contentView.centerXAnchor),
+            completedDaysLabel.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 24),
+            completedDaysLabel.centerXAnchor.constraint(equalTo: contentView.centerXAnchor),
+            completedDaysLabel.heightAnchor.constraint(equalToConstant: 38),
             
             // Поле для названия
-            nameTextField.topAnchor.constraint(equalTo: titleLabel.bottomAnchor, constant: 40),
             nameTextField.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 16),
             nameTextField.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -16),
             nameTextField.heightAnchor.constraint(equalToConstant: 75),
@@ -292,21 +330,65 @@ final class NewHabitCreationViewController: UIViewController {
             name = String(name[..<index])
         }
         
+        let finalTrackerID = trackerToEdit?.id ?? UUID()
+        let finalColor: UIColor
+        if let hex = selectedColorHex {
+            finalColor = UIColor(hex: hex)
+        } else {
+            finalColor = .black
+        }
+        
         let tracker = Tracker(
-            id: UUID(),
+            id: finalTrackerID,
             name: name,
-            color: selectedColor ?? .black,
+            color: finalColor,
             emoji: selectedEmoji ?? "😀",
             schedule: selectedSchedule
         )
         
-        TrackerStore.shared.addTracker(tracker, category: selectedCategory)
-        TrackerStore.shared.printAllTrackers()
+        if trackerToEdit != nil {
+            onCreate?(tracker)
+        } else {
+            TrackerStore.shared.addTracker(tracker, category: selectedCategory)
+            TrackerStore.shared.printAllTrackers()
+        }
         dismiss(animated: true)
     }
     
     @objc private func hideKeyboard() {
         view.endEditing(true)
+    }
+    
+    private func setupForEditing(tracker: Tracker, category: TrackerCategory?, completedDays: Int) {
+        createButton.setTitle("Сохранить", for: .normal)
+        nameTextField.text = tracker.name
+        selectedEmoji = tracker.emoji
+        selectedColorHex = tracker.color.toHexString()
+        selectedSchedule = tracker.schedule
+        selectedCategory = category
+        self.completedDays = completedDays
+        
+        completedDaysLabel.text = "\(completedDays) \(pluralizeDays(completedDays))"
+        completedDaysLabel.isHidden = false
+        
+        tableView.reloadData()
+        emojiCollectionView.reloadData()
+        colorCollectionView.reloadData()
+        updateCreateButtonState()
+    }
+    
+    private func pluralizeDays(_ count: Int) -> String {
+        let remainder10 = count % 10
+        
+        if remainder10 == 1 {
+            return "день"
+        }
+        
+        if remainder10 >= 2 && remainder10 <= 4 {
+            return "дня"
+        }
+        
+        return "дней"
     }
 }
 
@@ -500,7 +582,9 @@ extension NewHabitCreationViewController: UICollectionViewDataSource, UICollecti
         } else {
             let cell = collectionView.dequeueReusableCell(withReuseIdentifier: ColorCell.reuseId, for: indexPath) as! ColorCell
             let color = colors[indexPath.item]
-            cell.configure(with: color, selected: color == selectedColor)
+            let colorHex = color.toHexString()
+            let isSelected = colorHex == selectedColorHex
+            cell.configure(with: color, selected: isSelected)
             return cell
         }
     }
@@ -510,7 +594,8 @@ extension NewHabitCreationViewController: UICollectionViewDataSource, UICollecti
             selectedEmoji = emojis[indexPath.item]
             collectionView.reloadData()
         } else {
-            selectedColor = colors[indexPath.item]
+            let color = colors[indexPath.item]
+            selectedColorHex = color.toHexString()
             collectionView.reloadData()
         }
         updateCreateButtonState()
