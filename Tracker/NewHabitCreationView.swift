@@ -73,7 +73,7 @@ final class NewHabitCreationViewController: UIViewController {
         let btn = UIButton(type: .system)
         btn.setTitle("Отменить", for: .normal)
         btn.setTitleColor(.systemRed, for: .normal)
-        btn.backgroundColor = .white
+        btn.backgroundColor = UIColor(resource: .ypMainBackground)
         btn.layer.cornerRadius = 16
         btn.layer.borderWidth = 1
         btn.layer.borderColor = UIColor.systemRed.cgColor
@@ -287,15 +287,16 @@ final class NewHabitCreationViewController: UIViewController {
     private func updateCreateButtonState() {
         guard let text = nameTextField.text else { return }
         let isNameValid = !text.trimmingCharacters(in: .whitespaces).isEmpty && text.count <= 38
-        let isScheduleSelected = (selectedSchedule?.days.isEmpty == false)
+        let isScheduleSelected = selectedSchedule != nil && selectedSchedule!.days.isEmpty == false
+        let isCategorySelected = selectedCategory != nil
         let isEmojiSelected = selectedEmoji != nil
-        let isColorSelected = selectedColor != nil
-        let isValid = isNameValid && isScheduleSelected && isEmojiSelected && isColorSelected
+        let isColorSelected = selectedColorHex != nil
+        let isValid = isNameValid && isScheduleSelected && isCategorySelected && isEmojiSelected && isColorSelected
         
         UIView.animate(withDuration: 0.25) {
             if isValid {
                 self.createButton.backgroundColor = UIColor(resource: .ypBlack)
-                self.createButton.setTitleColor(.white, for: .normal)
+                self.createButton.setTitleColor(UIColor(resource: .ypMainBackground), for: .normal)
                 self.createButton.isEnabled = true
             } else {
                 self.createButton.backgroundColor = UIColor(resource: .ypGray3)
@@ -368,7 +369,7 @@ final class NewHabitCreationViewController: UIViewController {
         selectedCategory = category
         self.completedDays = completedDays
         
-        completedDaysLabel.text = "\(completedDays) \(pluralizeDays(completedDays))"
+        //completedDaysLabel.text = "\(completedDays) \(pluralizeDays(completedDays))"
         completedDaysLabel.isHidden = false
         
         tableView.reloadData()
@@ -377,7 +378,7 @@ final class NewHabitCreationViewController: UIViewController {
         updateCreateButtonState()
     }
     
-    private func pluralizeDays(_ count: Int) -> String {
+   /* private func pluralizeDays(_ count: Int) -> String {
         let remainder10 = count % 10
         
         if remainder10 == 1 {
@@ -389,7 +390,7 @@ final class NewHabitCreationViewController: UIViewController {
         }
         
         return "дней"
-    }
+    }*/
 }
 
 // MARK: - TableView
@@ -415,7 +416,7 @@ extension NewHabitCreationViewController: UITableViewDataSource, UITableViewDele
                 let categoryText = selectedCategory.title
                 config.secondaryText = categoryText
                 config.secondaryTextProperties.font = UIFont.systemFont(ofSize: 15)
-                config.secondaryTextProperties.color = .gray
+                config.secondaryTextProperties.color = UIColor(resource: .ypGray3)
             }
         }
         
@@ -423,7 +424,7 @@ extension NewHabitCreationViewController: UITableViewDataSource, UITableViewDele
             let daysText = selectedSchedule.daysText
             config.secondaryText = daysText
             config.secondaryTextProperties.font = UIFont.systemFont(ofSize: 15)
-            config.secondaryTextProperties.color = .gray
+            config.secondaryTextProperties.color = UIColor(resource: .ypGray3)
         }
         
         cell.contentConfiguration = config
@@ -433,7 +434,7 @@ extension NewHabitCreationViewController: UITableViewDataSource, UITableViewDele
         
         if indexPath.row == 0 {
             let separator = UIView()
-            separator.backgroundColor = UIColor.systemGray3
+            separator.backgroundColor = UIColor(resource: .ypGray3)
             separator.translatesAutoresizingMaskIntoConstraints = false
             separator.tag = 999
             separator.isUserInteractionEnabled = false
@@ -500,7 +501,7 @@ extension NewHabitCreationViewController: UITableViewDataSource, UITableViewDele
         required init?(coder: NSCoder) { fatalError() }
         func configure(with emoji: String, selected: Bool) {
             label.text = emoji
-            contentView.backgroundColor = selected ? UIColor(resource: .ypBackgroundGray) : .clear
+            contentView.backgroundColor = selected ? UIColor(resource: .ypGray4) : .clear
         }
     }
     

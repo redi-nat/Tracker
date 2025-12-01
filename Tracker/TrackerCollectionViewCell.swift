@@ -125,7 +125,7 @@ final class TrackerCollectionViewCell: UICollectionViewCell {
     
     private func setupQuantityView() {
         let quantityView = UIView()
-        quantityView.backgroundColor = .white
+        quantityView.backgroundColor = UIColor(resource: .ypMainBackground)
         quantityView.layer.cornerRadius = 12
         quantityView.layer.maskedCorners = [.layerMinXMaxYCorner, .layerMaxXMaxYCorner]
         quantityView.translatesAutoresizingMaskIntoConstraints = false
@@ -163,7 +163,13 @@ final class TrackerCollectionViewCell: UICollectionViewCell {
     func configure(with tracker: Tracker, count: Int, isCompleted: Bool, isFuture: Bool = false) {
         emojiLabel.text = tracker.emoji
         nameLabel.text = tracker.name
-        countLabel.text = "\(count) Дней"
+        //countLabel.text = "\(count) Дней"
+
+        let formatString = NSLocalizedString("days_count", comment: "Склонение слова 'день'/'day'")
+        print("FORMAT:", formatString)
+        let localizedDaysText = String.localizedStringWithFormat(formatString, count)
+        countLabel.text = localizedDaysText
+        
         cardView.backgroundColor = tracker.color
         plusButton.backgroundColor = tracker.color
         

@@ -34,7 +34,7 @@ final class ScheduleViewController: UIViewController {
     private let doneButton: UIButton = {
         let btn = UIButton(type: .system)
         btn.setTitle("Готово", for: .normal)
-        btn.setTitleColor(.white, for: .normal)
+        btn.setTitleColor(UIColor(resource: .ypMainBackground), for: .normal)
         btn.backgroundColor = UIColor(resource: .ypBlack)
         btn.layer.cornerRadius = 16
         btn.translatesAutoresizingMaskIntoConstraints = false
@@ -79,6 +79,7 @@ final class ScheduleViewController: UIViewController {
         tableView.dataSource = self
         tableView.delegate = self
         tableView.register(UITableViewCell.self, forCellReuseIdentifier: "cell")
+        tableView.separatorColor = UIColor(resource: .ypGray3)
     }
     
     @objc private func doneTapped() {

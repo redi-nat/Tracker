@@ -33,7 +33,7 @@ final class CategoryListViewController: UIViewController {
         button.setTitle("Добавить категорию", for: .normal)
         button.titleLabel?.font = .systemFont(ofSize: 17, weight: .medium)
         button.backgroundColor = UIColor(resource: .ypBlack)
-        button.setTitleColor(.white, for: .normal)
+        button.setTitleColor(UIColor(resource: .ypMainBackground), for: .normal)
         button.layer.cornerRadius = 16
         button.translatesAutoresizingMaskIntoConstraints = false
         return button
@@ -130,6 +130,7 @@ final class CategoryListViewController: UIViewController {
         tableView.delegate = self
         tableView.register(CustomCategoryCell.self, forCellReuseIdentifier: "CategoryCell")
         tableView.translatesAutoresizingMaskIntoConstraints = false
+        tableView.separatorColor = UIColor(resource: .ypGray3)
         
         tableView.tableFooterView = UIView()
         view.addSubview(tableView)

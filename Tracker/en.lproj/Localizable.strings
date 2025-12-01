@@ -1,0 +1,13 @@
+"trackers.title" = "Trackers";
+"filters.button" = "Filters";
+"tab.trackers" = "Trackers";
+"tab.statistics" = "Statistics";
+"stats.completed" = "Completed trackers";
+"empty.trackers.title" = "What shall we track?";
+"empty.search.title" = "Nothing found";
+"empty.stats.title" = "Nothing to analyze yet";
+"edit.context.menu" = "Edit";
+"delete.context.menu" = "Delete";
+"search.placeholder" = "Search";
+"days_count" = "%#@days_count@";
+

@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>days_count</key>
+	<dict>
+		<key>NSStringLocalizedFormatKey</key>
+		<string>&quot;%#@days_count@&quot;</string>
+		<key>days_count</key>
+		<dict>
+			<key>zero</key>
+			<string>%d days</string>
+			<key>other</key>
+			<string>%d days</string>
+			<key>one</key>
+			<string>%d day</string>
+			<key>NSStringFormatSpecTypeKey</key>
+			<string>n</string>
+			<key>NSStringFormatValueTypeKey</key>
+			<string>d</string>
+		</dict>
+	</dict>
+	<key>StringKey</key>
+	<dict>
+		<key>NSStringLocalizedFormatKey</key>
+		<string>%#@VARIABLE@</string>
+		<key>VARIABLE</key>
+		<dict>
+			<key>NSStringFormatSpecTypeKey</key>
+			<string>NSStringPluralRuleType</string>
+			<key>NSStringFormatValueTypeKey</key>
+			<string></string>
+			<key>zero</key>
+			<string></string>
+			<key>one</key>
+			<string></string>
+			<key>two</key>
+			<string></string>
+			<key>few</key>
+			<string></string>
+			<key>many</key>
+			<string></string>
+			<key>other</key>
+			<string></string>
+		</dict>
+	</dict>
+</dict>
+</plist>

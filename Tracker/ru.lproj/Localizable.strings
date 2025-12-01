@@ -1,0 +1,12 @@
+"trackers.title" = "Трекеры";
+"filters.button" = "Фильтры";
+"tab.trackers" = "Трекеры";
+"tab.statistics" = "Статистика";
+"stats.completed" = "Завершено трекеров";
+"empty.trackers.title" = "Что будем отслеживать?";
+"empty.search.title" = "Ничего не найдено";
+"empty.stats.title" = "Анализировать пока нечего";
+"edit.context.menu" = "Редактировать";
+"delete.context.menu" = "Удалить";
+"search.placeholder" = "Поиск";
+"days_count" = "%#@days_count@";

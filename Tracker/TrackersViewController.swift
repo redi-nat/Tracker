@@ -15,7 +15,7 @@ final class TrackersViewController: UIViewController {
     
     private let titleLabel: UILabel = {
         let label = UILabel()
-        label.text = "Трекеры"
+        label.text = NSLocalizedString("trackers.title", comment: "Заголовок экрана Трекеры")
         label.font = UIFont.boldSystemFont(ofSize: 34)
         label.textColor = UIColor(resource: .ypBlack)
         label.translatesAutoresizingMaskIntoConstraints = false
@@ -26,6 +26,10 @@ final class TrackersViewController: UIViewController {
         let picker = UIDatePicker()
         picker.datePickerMode = .date
         picker.preferredDatePickerStyle = .compact
+        picker.backgroundColor = UIColor(resource: .ypDatePicker)
+        picker.overrideUserInterfaceStyle = .light
+        picker.layer.cornerRadius = 8
+        picker.layer.masksToBounds = true
         picker.translatesAutoresizingMaskIntoConstraints = false
         picker.locale = Locale(identifier: "ru_RU")
         return picker
@@ -33,15 +37,26 @@ final class TrackersViewController: UIViewController {
     
     private let searchTextField: UITextField = {
         let textField = UITextField()
-        textField.placeholder = "Поиск"
+        textField.placeholder = NSLocalizedString("search.placeholder", comment: "Плейсхолдер для поиска")
         textField.font = UIFont.systemFont(ofSize: 17)
         textField.translatesAutoresizingMaskIntoConstraints = false
         textField.backgroundColor = UIColor(resource: .ypGray2)
+        textField.textColor = UIColor(resource: .ypGrayText)
+        
+        let placeholderColor = UIColor(resource: .ypGrayText)
+            
+            if let placeholderText = textField.placeholder {
+                textField.attributedPlaceholder = NSAttributedString(
+                    string: placeholderText,
+                    attributes: [.foregroundColor: placeholderColor]
+                )
+            }
+        
         textField.layer.cornerRadius = 10
         textField.layer.masksToBounds = true
         
         let imageView = UIImageView(image: UIImage(systemName: "magnifyingglass"))
-        imageView.tintColor = .systemGray
+        imageView.tintColor = UIColor(resource: .ypGrayText)
         imageView.contentMode = .scaleAspectFit
         imageView.frame = CGRect(x: 8, y: 0, width: 20, height: 20)
         
@@ -72,7 +87,7 @@ final class TrackersViewController: UIViewController {
     
     private let emptyStateLabel: UILabel = {
         let label = UILabel()
-        label.text = "Что будем отслеживать?"
+        label.text = NSLocalizedString("empty.trackers.title", comment: "Текст заглушки для пустого экрана трекеров")
         label.textColor = .label
         label.font = UIFont.systemFont(ofSize: 12)
         label.textAlignment = .center
@@ -85,6 +100,7 @@ final class TrackersViewController: UIViewController {
         let button = UIButton(type: .custom)
         let image = UIImage(resource: .addTracker)
         button.setImage(image, for: .normal)
+        button.tintColor = UIColor(resource: .ypBlack)
         button.layer.cornerRadius = 21
         button.translatesAutoresizingMaskIntoConstraints = false
         return button
@@ -92,7 +108,7 @@ final class TrackersViewController: UIViewController {
     
     private let filterButton: UIButton = {
         let button = UIButton(type: .system)
-        button.setTitle("Фильтры", for: .normal)
+        button.setTitle(NSLocalizedString("filters.button", comment: "Название кнопки Фильтры"), for: .normal)
         button.setTitleColor(.white, for: .normal)
         button.backgroundColor = UIColor(resource: .ypBlue)
         button.layer.cornerRadius = 16
@@ -105,7 +121,7 @@ final class TrackersViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         AnalyticsService.shared.reportOpenScreen()
-        view.backgroundColor = .systemBackground
+        view.backgroundColor = UIColor(resource: .ypMainBackground)
         setupUI()
         setupCollectionView()
         setupNavigationBar()
@@ -303,11 +319,11 @@ final class TrackersViewController: UIViewController {
         
         if !hasAnyTrackers {
             emptyStateImageView.image = UIImage(resource: .errorStar)
-            emptyStateLabel.text = "Что будем отслеживать?"
+            emptyStateLabel.text = NSLocalizedString("empty.trackers.title", comment: "Текст заглушки для пустого экрана трекеров")
             filterButton.isHidden = true
         } else if !hasTrackers {
             emptyStateImageView.image = UIImage(resource: .nothingFound)
-            emptyStateLabel.text = "Ничего не найдено"
+            emptyStateLabel.text = NSLocalizedString("empty.search.title", comment: "Текст заглушки для пустого экрана трекеров")
             filterButton.isHidden = false
         } else {
             filterButton.isHidden = false
@@ -604,12 +620,12 @@ extension TrackersViewController {
         
         return UIContextMenuConfiguration(identifier: indexPath as NSCopying, previewProvider: nil) { [weak self] _ in
             
-            let editAction = UIAction(title: "Редактировать") { _ in
+            let editAction = UIAction(title: NSLocalizedString("edit.context.menu", comment: "Действие Редактировать")) { _ in
                 AnalyticsService.shared.reportClick(on: AnalyticsService.Item.edit)
                 self?.editTracker(tracker)
             }
             
-            let deleteAction = UIAction(title: "Удалить", attributes: .destructive) { _ in
+            let deleteAction = UIAction(title: NSLocalizedString("delete.context.menu", comment: "Действие Удалить"), attributes: .destructive) { _ in
                 AnalyticsService.shared.reportClick(on: AnalyticsService.Item.delete)
                 self?.confirmAndDeleteTracker(tracker)
             }
