@@ -1,7 +1,7 @@
 import Foundation
 import CoreData
 
-final class TrackerRecordStore: NSObject {
+final class TrackerRecordStore: NSObject, TrackerRecordStoreProtocol {
     
     static let shared = TrackerRecordStore()
     

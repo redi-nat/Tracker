@@ -143,7 +143,7 @@ final class NewHabitCreationViewController: UIViewController {
     // MARK: - Data
     var selectedCategory: TrackerCategory?
     var selectedSchedule: TrackerSchedule? = nil
-    var onCreate: ((Tracker) -> Void)?
+    var onCreate: ((Tracker, TrackerCategory?) -> Void)?
     
     private let tableItems = ["Категория", "Расписание"]
     private let cellIdentifier = "cell"
@@ -349,7 +349,7 @@ final class NewHabitCreationViewController: UIViewController {
         )
         
         if trackerToEdit != nil {
-            onCreate?(tracker)
+            onCreate?(tracker, selectedCategory)
         } else {
             TrackerStore.shared.addTracker(tracker, category: selectedCategory)
             TrackerStore.shared.printAllTrackers()

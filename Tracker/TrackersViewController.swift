@@ -11,6 +11,24 @@ final class TrackersViewController: UIViewController {
     private var displayedCategories: [TrackerCategory] = []
     private var currentFilter: TrackerFilter = .allTrackers
     
+    private var trackerStore: TrackerStoreProtocol
+    private var recordStore: TrackerRecordStoreProtocol
+    private var categoryStore: TrackerCategoryStoreProtocol
+        
+        init(trackerStore: TrackerStoreProtocol = TrackerStore.shared,
+             recordStore: TrackerRecordStoreProtocol = TrackerRecordStore.shared,
+             categoryStore: TrackerCategoryStoreProtocol = TrackerCategoryStore.shared) {
+            
+            self.trackerStore = trackerStore
+            self.recordStore = recordStore
+            self.categoryStore = categoryStore
+            super.init(nibName: nil, bundle: nil)
+        }
+        
+        required init?(coder: NSCoder) {
+            fatalError("init(coder:) has not been implemented")
+        }
+    
     // MARK: - UI Components
     
     private let titleLabel: UILabel = {
@@ -44,13 +62,13 @@ final class TrackersViewController: UIViewController {
         textField.textColor = UIColor(resource: .ypGrayText)
         
         let placeholderColor = UIColor(resource: .ypGrayText)
-            
-            if let placeholderText = textField.placeholder {
-                textField.attributedPlaceholder = NSAttributedString(
-                    string: placeholderText,
-                    attributes: [.foregroundColor: placeholderColor]
-                )
-            }
+        
+        if let placeholderText = textField.placeholder {
+            textField.attributedPlaceholder = NSAttributedString(
+                string: placeholderText,
+                attributes: [.foregroundColor: placeholderColor]
+            )
+        }
         
         textField.layer.cornerRadius = 10
         textField.layer.masksToBounds = true
@@ -126,15 +144,15 @@ final class TrackersViewController: UIViewController {
         setupCollectionView()
         setupNavigationBar()
         
-        TrackerStore.shared.onDidUpdate = { [weak self] in
+        trackerStore.onDidUpdate = { [weak self] in
             self?.loadTrackers()
         }
         
-        TrackerRecordStore.shared.onDidUpdate = { [weak self] in
+        recordStore.onDidUpdate = { [weak self] in
             self?.updateTrackers(for: self?.selectedDate ?? Date())
         }
         
-        TrackerCategoryStore.shared.onDidUpdate = { [weak self] _ in
+        categoryStore.onDidUpdate = { [weak self] _ in
             self?.loadTrackers()
         }
         
@@ -245,7 +263,7 @@ final class TrackersViewController: UIViewController {
     // MARK: - Data
     
     private func loadTrackers() {
-        categories = TrackerStore.shared.fetchCategories()
+        categories = trackerStore.fetchCategories()
         updateTrackers(for: selectedDate)
     }
     
@@ -348,10 +366,10 @@ final class TrackersViewController: UIViewController {
         AnalyticsService.shared.reportClick(on: AnalyticsService.Item.addTrack)
         let habitVC = NewHabitCreationViewController()
         
-        habitVC.onCreate = { [weak self] tracker in
+        habitVC.onCreate = { [weak self] tracker, category in
             guard let self else { return }
             
-            TrackerStore.shared.addTracker(tracker)
+            self.trackerStore.addTracker(tracker, category: category)
         }
         
         let nav = UINavigationController(rootViewController: habitVC)
@@ -379,20 +397,20 @@ final class TrackersViewController: UIViewController {
     func completeTracker(_ tracker: Tracker, for date: Date) {
         let normalizedDate = getNormalizedDate(date)
         let record = TrackerRecord(trackerId: tracker.id, date: normalizedDate)
-        TrackerRecordStore.shared.addRecord(record)
+        recordStore.addRecord(record)
         StatisticsService.shared.incrementCompletedTrackers()
     }
     
     func uncompleteTracker(_ tracker: Tracker, for date: Date) {
         let normalizedDate = getNormalizedDate(date)
         let record = TrackerRecord(trackerId: tracker.id, date: normalizedDate)
-        TrackerRecordStore.shared.removeRecord(record)
+        recordStore.removeRecord(record)
         StatisticsService.shared.decrementCompletedTrackers()
     }
     
     func isTrackerCompleted(_ tracker: Tracker, on date: Date) -> Bool {
         let normalizedDate = getNormalizedDate(date)
-        let isCompleted = !TrackerRecordStore.shared.fetchRecords(for: normalizedDate, trackerId: tracker.id).isEmpty
+        let isCompleted = !recordStore.fetchRecords(for: normalizedDate, trackerId: tracker.id).isEmpty
         return isCompleted
     }
     
@@ -403,13 +421,13 @@ final class TrackersViewController: UIViewController {
             return
         }
         
-        let completedDaysCount = TrackerRecordStore.shared.countCompletedDays(for: tracker.id)
+        let completedDaysCount = recordStore.countCompletedDays(for: tracker.id)
         let habitVC = NewHabitCreationViewController(trackerToEdit: tracker, category: category, completedDays: completedDaysCount)
         
-        habitVC.onCreate = { [weak self] updatedTracker in
+        habitVC.onCreate = { [weak self] updatedTracker, newCategory in
             guard let self else { return }
-            let newCategoryTitle = habitVC.selectedCategory?.title
-            TrackerStore.shared.updateTracker(updatedTracker, newCategoryTitle: newCategoryTitle)
+            let newCategoryTitle = newCategory?.title
+            self.trackerStore.updateTracker(updatedTracker, newCategoryTitle: newCategoryTitle)
         }
         
         let nav = UINavigationController(rootViewController: habitVC)
@@ -424,7 +442,7 @@ final class TrackersViewController: UIViewController {
                                       preferredStyle: .actionSheet)
         
         let deleteAction = UIAlertAction(title: "Удалить", style: .destructive) { [weak self] _ in
-            TrackerStore.shared.deleteTracker(id: tracker.id)
+            self?.trackerStore.deleteTracker(id: tracker.id)
         }
         
         let cancelAction = UIAlertAction(title: "Отменить", style: .cancel)
@@ -457,7 +475,7 @@ extension TrackersViewController: UICollectionViewDataSource, UICollectionViewDe
         ) as? TrackerCollectionViewCell else { return UICollectionViewCell() }
         
         let isCompleted = isTrackerCompleted(tracker, on: selectedDate)
-        let count = TrackerRecordStore.shared.fetchAllRecords(for: tracker.id).count
+        let count = recordStore.fetchAllRecords(for: tracker.id).count
         let isFuture = Calendar.current.compare(selectedDate, to: Date(), toGranularity: .day) == .orderedDescending
         
         cell.configure(with: tracker, count: count, isCompleted: isCompleted, isFuture: isFuture)

@@ -9,10 +9,24 @@
 /* Begin PBXBuildFile section */
 		DEAF57602EDC7FA800E71538 /* YandexMobileMetrica in Frameworks */ = {isa = PBXBuildFile; productRef = DEAF575F2EDC7FA800E71538 /* YandexMobileMetrica */; };
 		DEAF57622EDC7FA800E71538 /* YandexMobileMetricaCrashes in Frameworks */ = {isa = PBXBuildFile; productRef = DEAF57612EDC7FA800E71538 /* YandexMobileMetricaCrashes */; };
+		DEAF58552EDF4D4200E71538 /* InlineSnapshotTesting in Frameworks */ = {isa = PBXBuildFile; productRef = DEAF58542EDF4D4200E71538 /* InlineSnapshotTesting */; };
+		DEAF58572EDF4D4200E71538 /* SnapshotTesting in Frameworks */ = {isa = PBXBuildFile; productRef = DEAF58562EDF4D4200E71538 /* SnapshotTesting */; };
+		DEAF58592EDF4D4200E71538 /* SnapshotTestingCustomDump in Frameworks */ = {isa = PBXBuildFile; productRef = DEAF58582EDF4D4200E71538 /* SnapshotTestingCustomDump */; };
 /* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		DEAF584E2EDF4D1000E71538 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = DE1CD64D2E8EDFB1008DEE85 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = DE1CD6542E8EDFB1008DEE85;
+			remoteInfo = Tracker;
+		};
+/* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
 		DE1CD6552E8EDFB1008DEE85 /* Tracker.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Tracker.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		DEAF584A2EDF4D1000E71538 /* TrackerSnapsotsTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = TrackerSnapsotsTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
@@ -34,6 +48,11 @@
 			path = Tracker;
 			sourceTree = "<group>";
 		};
+		DEAF584B2EDF4D1000E71538 /* TrackerSnapsotsTests */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			path = TrackerSnapsotsTests;
+			sourceTree = "<group>";
+		};
 /* End PBXFileSystemSynchronizedRootGroup section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -46,6 +65,16 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		DEAF58472EDF4D1000E71538 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				DEAF58592EDF4D4200E71538 /* SnapshotTestingCustomDump in Frameworks */,
+				DEAF58552EDF4D4200E71538 /* InlineSnapshotTesting in Frameworks */,
+				DEAF58572EDF4D4200E71538 /* SnapshotTesting in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
@@ -53,6 +82,8 @@
 			isa = PBXGroup;
 			children = (
 				DE1CD6572E8EDFB1008DEE85 /* Tracker */,
+				DEAF584B2EDF4D1000E71538 /* TrackerSnapsotsTests */,
+				DEAF58362EDF45FB00E71538 /* Frameworks */,
 				DE1CD6562E8EDFB1008DEE85 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -61,8 +92,16 @@
 			isa = PBXGroup;
 			children = (
 				DE1CD6552E8EDFB1008DEE85 /* Tracker.app */,
+				DEAF584A2EDF4D1000E71538 /* TrackerSnapsotsTests.xctest */,
 			);
 			name = Products;
+			sourceTree = "<group>";
+		};
+		DEAF58362EDF45FB00E71538 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = Frameworks;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -92,6 +131,32 @@
 			productReference = DE1CD6552E8EDFB1008DEE85 /* Tracker.app */;
 			productType = "com.apple.product-type.application";
 		};
+		DEAF58492EDF4D1000E71538 /* TrackerSnapsotsTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = DEAF58502EDF4D1000E71538 /* Build configuration list for PBXNativeTarget "TrackerSnapsotsTests" */;
+			buildPhases = (
+				DEAF58462EDF4D1000E71538 /* Sources */,
+				DEAF58472EDF4D1000E71538 /* Frameworks */,
+				DEAF58482EDF4D1000E71538 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				DEAF584F2EDF4D1000E71538 /* PBXTargetDependency */,
+			);
+			fileSystemSynchronizedGroups = (
+				DEAF584B2EDF4D1000E71538 /* TrackerSnapsotsTests */,
+			);
+			name = TrackerSnapsotsTests;
+			packageProductDependencies = (
+				DEAF58542EDF4D4200E71538 /* InlineSnapshotTesting */,
+				DEAF58562EDF4D4200E71538 /* SnapshotTesting */,
+				DEAF58582EDF4D4200E71538 /* SnapshotTestingCustomDump */,
+			);
+			productName = TrackerSnapsotsTests;
+			productReference = DEAF584A2EDF4D1000E71538 /* TrackerSnapsotsTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
@@ -104,6 +169,10 @@
 				TargetAttributes = {
 					DE1CD6542E8EDFB1008DEE85 = {
 						CreatedOnToolsVersion = 16.4;
+					};
+					DEAF58492EDF4D1000E71538 = {
+						CreatedOnToolsVersion = 16.4;
+						TestTargetID = DE1CD6542E8EDFB1008DEE85;
 					};
 				};
 			};
@@ -119,6 +188,7 @@
 			minimizedProjectReferenceProxies = 1;
 			packageReferences = (
 				DEAF575E2EDC7FA800E71538 /* XCRemoteSwiftPackageReference "metrica-sdk-ios" */,
+				DEAF58532EDF4D4200E71538 /* XCRemoteSwiftPackageReference "swift-snapshot-testing" */,
 			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = DE1CD6562E8EDFB1008DEE85 /* Products */;
@@ -126,12 +196,20 @@
 			projectRoot = "";
 			targets = (
 				DE1CD6542E8EDFB1008DEE85 /* Tracker */,
+				DEAF58492EDF4D1000E71538 /* TrackerSnapsotsTests */,
 			);
 		};
 /* End PBXProject section */
 
 /* Begin PBXResourcesBuildPhase section */
 		DE1CD6532E8EDFB1008DEE85 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		DEAF58482EDF4D1000E71538 /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -148,7 +226,22 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		DEAF58462EDF4D1000E71538 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		DEAF584F2EDF4D1000E71538 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = DE1CD6542E8EDFB1008DEE85 /* Tracker */;
+			targetProxy = DEAF584E2EDF4D1000E71538 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
 
 /* Begin XCBuildConfiguration section */
 		DE1CD66C2E8EDFB3008DEE85 /* Debug */ = {
@@ -279,6 +372,7 @@
 				SDKROOT = iphoneos;
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "DEBUG $(inherited)";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 6.0;
 			};
 			name = Debug;
 		};
@@ -336,7 +430,44 @@
 				MTL_FAST_MATH = YES;
 				SDKROOT = iphoneos;
 				SWIFT_COMPILATION_MODE = wholemodule;
+				SWIFT_VERSION = 6.0;
 				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		DEAF58512EDF4D1000E71538 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = 33Q5USYP83;
+				GENERATE_INFOPLIST_FILE = YES;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = "com.redi-nat.TrackerSnapsotsTests";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Tracker.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/Tracker";
+			};
+			name = Debug;
+		};
+		DEAF58522EDF4D1000E71538 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = 33Q5USYP83;
+				GENERATE_INFOPLIST_FILE = YES;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = "com.redi-nat.TrackerSnapsotsTests";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Tracker.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/Tracker";
 			};
 			name = Release;
 		};
@@ -361,6 +492,15 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
+		DEAF58502EDF4D1000E71538 /* Build configuration list for PBXNativeTarget "TrackerSnapsotsTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				DEAF58512EDF4D1000E71538 /* Debug */,
+				DEAF58522EDF4D1000E71538 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
@@ -370,6 +510,14 @@
 			requirement = {
 				kind = upToNextMajorVersion;
 				minimumVersion = 4.5.2;
+			};
+		};
+		DEAF58532EDF4D4200E71538 /* XCRemoteSwiftPackageReference "swift-snapshot-testing" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/pointfreeco/swift-snapshot-testing";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 1.18.7;
 			};
 		};
 /* End XCRemoteSwiftPackageReference section */
@@ -384,6 +532,21 @@
 			isa = XCSwiftPackageProductDependency;
 			package = DEAF575E2EDC7FA800E71538 /* XCRemoteSwiftPackageReference "metrica-sdk-ios" */;
 			productName = YandexMobileMetricaCrashes;
+		};
+		DEAF58542EDF4D4200E71538 /* InlineSnapshotTesting */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = DEAF58532EDF4D4200E71538 /* XCRemoteSwiftPackageReference "swift-snapshot-testing" */;
+			productName = InlineSnapshotTesting;
+		};
+		DEAF58562EDF4D4200E71538 /* SnapshotTesting */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = DEAF58532EDF4D4200E71538 /* XCRemoteSwiftPackageReference "swift-snapshot-testing" */;
+			productName = SnapshotTesting;
+		};
+		DEAF58582EDF4D4200E71538 /* SnapshotTestingCustomDump */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = DEAF58532EDF4D4200E71538 /* XCRemoteSwiftPackageReference "swift-snapshot-testing" */;
+			productName = SnapshotTestingCustomDump;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};
