@@ -12,9 +12,10 @@ final class NewHabitCreationViewController: UIViewController {
     
     // MARK: - Init
     
-    init(trackerToEdit: Tracker? = nil, category: TrackerCategory? = nil) {
+    init(trackerToEdit: Tracker? = nil, category: TrackerCategory? = nil, completedDays: Int = 0) {
         self.trackerToEdit = trackerToEdit
         self.originalCategory = category
+        self.completedDays = completedDays
         super.init(nibName: nil, bundle: nil)
         
         if trackerToEdit != nil {
@@ -367,9 +368,8 @@ final class NewHabitCreationViewController: UIViewController {
         selectedColorHex = tracker.color.toHexString()
         selectedSchedule = tracker.schedule
         selectedCategory = category
-        self.completedDays = completedDays
         
-        //completedDaysLabel.text = "\(completedDays) \(pluralizeDays(completedDays))"
+        completedDaysLabel.text = "\(self.completedDays) \(pluralizeDays(self.completedDays))"
         completedDaysLabel.isHidden = false
         
         tableView.reloadData()
@@ -378,19 +378,19 @@ final class NewHabitCreationViewController: UIViewController {
         updateCreateButtonState()
     }
     
-   /* private func pluralizeDays(_ count: Int) -> String {
+    private func pluralizeDays(_ count: Int) -> String {
         let remainder10 = count % 10
         
         if remainder10 == 1 {
-            return "день"
+            return NSLocalizedString("count.one.title", comment: "Один день")
         }
         
         if remainder10 >= 2 && remainder10 <= 4 {
-            return "дня"
+            return NSLocalizedString("count.few.title", comment: "Два-четыре дня")
         }
         
-        return "дней"
-    }*/
+        return NSLocalizedString("count.many.title", comment: "Много дней")
+    }
 }
 
 // MARK: - TableView

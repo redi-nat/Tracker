@@ -73,7 +73,7 @@ final class TrackersViewController: UIViewController {
         layout.scrollDirection = .vertical
         let cv = UICollectionView(frame: .zero, collectionViewLayout: layout)
         cv.translatesAutoresizingMaskIntoConstraints = false
-        cv.backgroundColor = .systemBackground
+        cv.backgroundColor = UIColor(resource: .ypMainBackground)
         return cv
     }()
     
@@ -403,7 +403,8 @@ final class TrackersViewController: UIViewController {
             return
         }
         
-        let habitVC = NewHabitCreationViewController(trackerToEdit: tracker, category: category)
+        let completedDaysCount = TrackerRecordStore.shared.countCompletedDays(for: tracker.id)
+        let habitVC = NewHabitCreationViewController(trackerToEdit: tracker, category: category, completedDays: completedDaysCount)
         
         habitVC.onCreate = { [weak self] updatedTracker in
             guard let self else { return }

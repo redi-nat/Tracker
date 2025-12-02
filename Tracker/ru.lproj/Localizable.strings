@@ -9,4 +9,6 @@
 "edit.context.menu" = "Редактировать";
 "delete.context.menu" = "Удалить";
 "search.placeholder" = "Поиск";
-"days_count" = "%#@days_count@";
+"count.one.title" = "День";
+"count.few.title" = "Дня";
+"count.many.title" = "Дней";

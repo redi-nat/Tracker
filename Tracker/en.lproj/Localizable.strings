@@ -10,4 +10,7 @@
 "delete.context.menu" = "Delete";
 "search.placeholder" = "Search";
 "days_count" = "%#@days_count@";
+"count.one.title" = "Day";
+"count.few.title" = "Days";
+"count.many.title" = "Days";
 

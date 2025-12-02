@@ -163,12 +163,7 @@ final class TrackerCollectionViewCell: UICollectionViewCell {
     func configure(with tracker: Tracker, count: Int, isCompleted: Bool, isFuture: Bool = false) {
         emojiLabel.text = tracker.emoji
         nameLabel.text = tracker.name
-        //countLabel.text = "\(count) Дней"
-
-        let formatString = NSLocalizedString("days_count", comment: "Склонение слова 'день'/'day'")
-        print("FORMAT:", formatString)
-        let localizedDaysText = String.localizedStringWithFormat(formatString, count)
-        countLabel.text = localizedDaysText
+        countLabel.text = "\(count) \(pluralizeDays(count))"
         
         cardView.backgroundColor = tracker.color
         plusButton.backgroundColor = tracker.color
@@ -182,6 +177,20 @@ final class TrackerCollectionViewCell: UICollectionViewCell {
         
         plusButton.isEnabled = !isFuture
         plusButton.alpha = isFuture ? 0.5 : 1.0
+    }
+    
+    private func pluralizeDays(_ count: Int) -> String {
+        let remainder10 = count % 10
+        
+        if remainder10 == 1 {
+            return NSLocalizedString("count.one.title", comment: "Один день")
+        }
+        
+        if remainder10 >= 2 && remainder10 <= 4 {
+            return NSLocalizedString("count.few.title", comment: "Два-четыре дня")
+        }
+        
+        return NSLocalizedString("count.many.title", comment: "Много дней")
     }
 }
 
