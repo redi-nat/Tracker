@@ -14,20 +14,20 @@ final class TrackersViewController: UIViewController {
     private var trackerStore: TrackerStoreProtocol
     private var recordStore: TrackerRecordStoreProtocol
     private var categoryStore: TrackerCategoryStoreProtocol
+    
+    init(trackerStore: TrackerStoreProtocol = TrackerStore.shared,
+         recordStore: TrackerRecordStoreProtocol = TrackerRecordStore.shared,
+         categoryStore: TrackerCategoryStoreProtocol = TrackerCategoryStore.shared) {
         
-        init(trackerStore: TrackerStoreProtocol = TrackerStore.shared,
-             recordStore: TrackerRecordStoreProtocol = TrackerRecordStore.shared,
-             categoryStore: TrackerCategoryStoreProtocol = TrackerCategoryStore.shared) {
-            
-            self.trackerStore = trackerStore
-            self.recordStore = recordStore
-            self.categoryStore = categoryStore
-            super.init(nibName: nil, bundle: nil)
-        }
-        
-        required init?(coder: NSCoder) {
-            fatalError("init(coder:) has not been implemented")
-        }
+        self.trackerStore = trackerStore
+        self.recordStore = recordStore
+        self.categoryStore = categoryStore
+        super.init(nibName: nil, bundle: nil)
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
     
     // MARK: - UI Components
     
@@ -187,10 +187,17 @@ final class TrackersViewController: UIViewController {
         addButton.removeTarget(nil, action: nil, for: .allEvents)
         addButton.addTarget(self, action: #selector(addTrackerButtonTapped(_:)), for: .touchUpInside)
         
-        let leftBarButtonItem = UIBarButtonItem(customView: addButton)
-        leftBarButtonItem.customView?.widthAnchor.constraint(equalToConstant: 42).isActive = true
-        leftBarButtonItem.customView?.heightAnchor.constraint(equalToConstant: 42).isActive = true
+        let containerView = UIView(frame: CGRect(x: 0, y: 0, width: 42, height: 42))
+        containerView.addSubview(addButton)
         
+        NSLayoutConstraint.activate([
+            addButton.widthAnchor.constraint(equalToConstant: 42),
+            addButton.heightAnchor.constraint(equalToConstant: 42),
+            addButton.leadingAnchor.constraint(equalTo: containerView.leadingAnchor, constant: -16),
+            addButton.centerYAnchor.constraint(equalTo: containerView.centerYAnchor)
+        ])
+        
+        let leftBarButtonItem = UIBarButtonItem(customView: containerView)
         navigationItem.leftBarButtonItem = leftBarButtonItem
         
         datePicker.removeTarget(nil, action: nil, for: .allEvents)

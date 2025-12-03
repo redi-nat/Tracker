@@ -89,6 +89,7 @@ final class NewHabitCreationViewController: UIViewController {
         btn.backgroundColor = UIColor(resource: .ypGray3)
         btn.layer.cornerRadius = 16
         btn.translatesAutoresizingMaskIntoConstraints = false
+        btn.isEnabled = false
         return btn
     }()
     
@@ -251,13 +252,14 @@ final class NewHabitCreationViewController: UIViewController {
             // Кнопки
             cancelButton.topAnchor.constraint(equalTo: colorCollectionView.bottomAnchor, constant: 16),
             cancelButton.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 20),
-            cancelButton.widthAnchor.constraint(equalToConstant: 166),
             cancelButton.heightAnchor.constraint(equalToConstant: 60),
+            
             createButton.topAnchor.constraint(equalTo: colorCollectionView.bottomAnchor, constant: 16),
             createButton.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -20),
-            createButton.widthAnchor.constraint(equalToConstant: 166),
             createButton.heightAnchor.constraint(equalToConstant: 60),
             
+            cancelButton.widthAnchor.constraint(equalTo: createButton.widthAnchor),
+            createButton.leadingAnchor.constraint(equalTo: cancelButton.trailingAnchor, constant: 8),
             createButton.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -40)
         ])
     }
