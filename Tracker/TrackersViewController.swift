@@ -181,34 +181,33 @@ final class TrackersViewController: UIViewController {
         setupEmptyState()
         setupConstraints()
     }
-    
+
     private func setupNavigationBar() {
-        
         addButton.removeTarget(nil, action: nil, for: .allEvents)
         addButton.addTarget(self, action: #selector(addTrackerButtonTapped(_:)), for: .touchUpInside)
         
-        let containerView = UIView(frame: CGRect(x: 0, y: 0, width: 42, height: 42))
+        let buttonSize: CGFloat = 42
+        let desiredLeftInsetFromScreen: CGFloat = 16
+        let containerWidth = buttonSize
+        let containerView = UIView(frame: CGRect(x: 0, y: 0, width: containerWidth, height: buttonSize))
+        containerView.backgroundColor = .clear
+        containerView.clipsToBounds = false
+        
+        addButton.frame = CGRect(x: -desiredLeftInsetFromScreen, y: 0, width: buttonSize, height: buttonSize)
+        addButton.contentMode = .center
+        addButton.translatesAutoresizingMaskIntoConstraints = true
+
         containerView.addSubview(addButton)
-        
-        NSLayoutConstraint.activate([
-            addButton.widthAnchor.constraint(equalToConstant: 42),
-            addButton.heightAnchor.constraint(equalToConstant: 42),
-            addButton.leadingAnchor.constraint(equalTo: containerView.leadingAnchor, constant: -16),
-            addButton.centerYAnchor.constraint(equalTo: containerView.centerYAnchor)
-        ])
-        
-        let leftBarButtonItem = UIBarButtonItem(customView: containerView)
-        navigationItem.leftBarButtonItem = leftBarButtonItem
-        
+
+        let barItem = UIBarButtonItem(customView: containerView)
+        navigationItem.leftBarButtonItem = barItem
+
         datePicker.removeTarget(nil, action: nil, for: .allEvents)
         datePicker.addTarget(self, action: #selector(dateChanged(_:)), for: .valueChanged)
-        
         datePicker.widthAnchor.constraint(equalToConstant: 100).isActive = true
-        
-        let rightBarButtonItem = UIBarButtonItem(customView: datePicker)
-        navigationItem.rightBarButtonItem = rightBarButtonItem
+        navigationItem.rightBarButtonItem = UIBarButtonItem(customView: datePicker)
     }
-    
+
     private func setupEmptyState() {
         NSLayoutConstraint.activate([
             emptyStateImageView.centerXAnchor.constraint(equalTo: view.centerXAnchor),
