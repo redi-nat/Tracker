@@ -55,6 +55,7 @@ final class FiltersViewController: UIViewController {
     private func setupUI() {
         view.addSubview(titleLabel)
         view.addSubview(tableView)
+        tableView.separatorColor = UIColor(resource: .ypGray3)
         
         NSLayoutConstraint.activate([
             // Заголовок
@@ -95,13 +96,7 @@ extension FiltersViewController: UITableViewDataSource, UITableViewDelegate {
         
         cell.accessoryType = shouldShowCheckmark ? .checkmark : .none
         cell.tintColor = UIColor(resource: .ypBlue)
-        
-        if indexPath.row == filters.count - 1 {
-            tableView.separatorStyle = .none
-        } else {
-            tableView.separatorStyle = .singleLine
-        }
-        
+   
         return cell
     }
     
@@ -111,5 +106,14 @@ extension FiltersViewController: UITableViewDataSource, UITableViewDelegate {
         let selectedFilter = filters[indexPath.row]
         delegate?.didSelectFilter(selectedFilter)
         dismiss(animated: true)
+    }
+    
+    func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
+        cell.separatorInset = UIEdgeInsets(top: 0, left: 16, bottom: 0, right: 16)
+        
+        let lastRow = tableView.numberOfRows(inSection: indexPath.section) - 1
+        if indexPath.row == lastRow {
+                    cell.separatorInset = UIEdgeInsets(top: 0, left: 0, bottom: 0, right: tableView.bounds.width)
+                }
     }
 }
