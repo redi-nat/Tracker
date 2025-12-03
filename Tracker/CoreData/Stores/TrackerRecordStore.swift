@@ -1,7 +1,7 @@
 import Foundation
 import CoreData
 
-final class TrackerRecordStore: NSObject {
+final class TrackerRecordStore: NSObject, TrackerRecordStoreProtocol {
     
     static let shared = TrackerRecordStore()
     
@@ -115,6 +115,25 @@ final class TrackerRecordStore: NSObject {
         CoreDataStack.shared.saveContext()
         
         onDidUpdate?()
+    }
+    
+    // MARK: - Count completed days
+
+    func countCompletedDays(for trackerId: UUID) -> Int {
+        let request: NSFetchRequest<TrackerRecordCoreData> = TrackerRecordCoreData.fetchRequest()
+        
+        request.predicate = NSPredicate(
+            format: "trackerId == %@",
+            trackerId as CVarArg
+        )
+        
+        do {
+            let count = try context.count(for: request)
+            return count != NSNotFound ? count : 0
+        } catch {
+            print("ERROR: Failed to count records for trackerId \(trackerId): \(error.localizedDescription)")
+            return 0
+        }
     }
 }
 

@@ -1,7 +1,7 @@
 import Foundation
 import CoreData
 
-final class TrackerStore: NSObject {
+final class TrackerStore: NSObject, TrackerStoreProtocol {
 
     static let shared = TrackerStore()
     
@@ -97,6 +97,38 @@ final class TrackerStore: NSObject {
                 print("Tracker: \(t.name ?? "nil"), id: \(t.id?.uuidString ?? "nil")")
             }
         }
+    }
+
+    func updateTracker(_ tracker: Tracker, newCategoryTitle: String? = nil) {
+        
+        let request: NSFetchRequest<TrackerCoreData> = TrackerCoreData.fetchRequest()
+        request.predicate = NSPredicate(format: "id == %@", tracker.id as CVarArg)
+
+        guard let existingTracker = try? context.fetch(request).first else {
+            print("Ошибка: Трекер с ID \(tracker.id) для обновления не найден")
+            return
+        }
+
+        existingTracker.configure(from: tracker, context: context)
+        
+        if let newTitle = newCategoryTitle, newTitle != existingTracker.category?.title {
+            
+            let categoryRequest: NSFetchRequest<TrackerCategoryCoreData> = TrackerCategoryCoreData.fetchRequest()
+            categoryRequest.predicate = NSPredicate(format: "title == %@", newTitle)
+            
+            let categoryCD: TrackerCategoryCoreData
+            if let fetchedCategory = try? context.fetch(categoryRequest).first {
+                categoryCD = fetchedCategory
+            } else {
+                categoryCD = TrackerCategoryCoreData(context: context)
+                categoryCD.title = newTitle
+            }
+            
+            existingTracker.category = categoryCD
+        }
+
+        CoreDataStack.shared.saveContext()
+        onDidUpdate?()
     }
 }
 

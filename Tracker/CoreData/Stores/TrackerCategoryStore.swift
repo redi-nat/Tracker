@@ -1,7 +1,7 @@
 import Foundation
 import CoreData
 
-final class TrackerCategoryStore: NSObject {
+final class TrackerCategoryStore: NSObject, TrackerCategoryStoreProtocol {
 
     static let shared = TrackerCategoryStore()
     var onDidUpdate: ((TrackerCategoryStore) -> Void)?
